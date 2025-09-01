@@ -1,0 +1,96 @@
+/* EventDetails.css */
+
+.event-details {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+
+/* Left Image Section */
+
+.event-details .event-image {
+    flex: 1;
+    max-width: 400px;
+}
+
+.event-details .event-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Right Info Section */
+
+.event-details .event-info {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.event-details .event-info h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.event-details .event-info p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 5px 0;
+}
+
+.event-details .event-info strong {
+    color: #222;
+}
+
+
+/* Grid style for date, time, location */
+
+.event-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    margin-top: 15px;
+}
+
+.event-meta div {
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Back Button */
+
+.back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #3498db;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    text-align: center;
+    width: fit-content;
+}
+
+.back-btn:hover {
+    background: #2980b9;
+}

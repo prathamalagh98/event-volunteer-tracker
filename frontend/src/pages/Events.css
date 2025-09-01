@@ -1,0 +1,708 @@
+/* Page */
+
+.events-page h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.event-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.event-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.event-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.event-info {
+    padding: 1rem;
+}
+
+.btn-view-event,
+.btn-back {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.btn-view-event:hover,
+.btn-back:hover {
+    background: #0056b3;
+}
+
+
+/* Animations */
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUp 0.8s ease forwards;
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-zoom {
+    animation: zoomIn 0.8s ease forwards;
+}
+
+.loading,
+.error {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+}
+
+.event-detail img.event-detail-image {
+    width: 100%;
+    max-width: 600px;
+    display: block;
+    margin: 1rem auto;
+    border-radius: 10px;
+}
+
+
+/* =========================
+   EVENTS (ADMIN) – CRUD UI
+   ========================= */
+
+
+/* Page header with Add button */
+
+.events-page .events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin: 28px 0 18px;
+}
+
+.events-page .events-header h1 {
+    font-size: clamp(1.6rem, 2.5vw, 2rem);
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+
+/* Cards & Grid */
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+}
+
+.event-card {
+    background: var(--white);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+}
+
+.event-image {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    display: block;
+}
+
+.event-info {
+    padding: 14px 16px 16px;
+}
+
+.event-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+}
+
+.event-info p {
+    color: var(--gray);
+    margin: 4px 0;
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 10px;
+}
+
+
+/* View button */
+
+.btn-view-event {
+    text-decoration: none;
+    border: 1px solid var(--light-gray);
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+.btn-view-event:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+
+/* Primary/Secondary buttons (Add/Save/Cancel) */
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--white);
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: filter .2s ease, transform .15s ease;
+    box-shadow: 0 6px 14px rgba(67, 97, 238, .18);
+}
+
+.btn-primary:hover {
+    filter: brightness(.96);
+    transform: translateY(-1px);
+}
+
+.btn-secondary-outline {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-secondary-outline:hover {
+    background: var(--primary-light);
+}
+
+
+/* Admin actions on card */
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit,
+.btn-delete {
+    border: 0;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+.btn-edit {
+    background: var(--secondary);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(6, 214, 160, .18);
+}
+
+.btn-edit:hover {
+    filter: brightness(.95);
+    transform: translateY(-1px);
+}
+
+.btn-delete {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(255, 107, 107, .18);
+}
+
+.btn-delete:hover {
+    filter: brightness(.95);
+    transform: translateY(-1px);
+}
+
+
+/* Add Event form card */
+
+.card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+}
+
+.add-form {
+    margin-bottom: 16px;
+}
+
+.add-form .form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.add-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.add-form input,
+.add-form textarea {
+    border: 1px solid var(--light-gray);
+    border-radius: 12px;
+    padding: 11px 12px;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.add-form textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.add-form input:focus,
+.add-form textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(67, 97, 238, .12);
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+
+/* Loading / Error states */
+
+.loading,
+.error {
+    display: grid;
+    place-items: center;
+    min-height: 140px;
+    color: var(--dark);
+}
+
+.error p {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+
+/* Edit Modal */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    display: grid;
+    place-items: center;
+    z-index: 2000;
+    animation: fadeInModal .18s ease-out;
+}
+
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    width: min(720px, 94vw);
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, .2);
+    overflow: hidden;
+}
+
+.modal-header,
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+}
+
+.modal-close {
+    background: transparent;
+    border: 0;
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.modal-close:hover {
+    background: var(--primary-light);
+}
+
+.modal-body {
+    padding: 16px;
+}
+
+.modal-body .form-row {
+    margin-bottom: 12px;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--light-gray);
+}
+
+
+/* Small tweaks */
+
+.events-page .btn-primary:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+}
+
+
+/* Responsive */
+
+@media (max-width: 640px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+    .event-image {
+        height: 150px;
+    }
+}
+
+.events-page {
+    padding: 20px;
+    font-family: "Poppins", sans-serif;
+    color: #333;
+}
+
+.events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.events-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.events-header button {
+    padding: 8px 16px;
+    background: #4cafef;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.events-header button:hover {
+    background: #2196f3;
+}
+
+
+/* Add/Edit Form */
+
+.add-form,
+.modal .form-row,
+.modal .form-grid-2 {
+    margin-bottom: 15px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-row input,
+.form-row textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+    border-color: #4cafef;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.form-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.form-actions button[type="submit"] {
+    background: #4caf50;
+    color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+    background: #388e3c;
+}
+
+.form-actions button[type="button"] {
+    background: #ddd;
+}
+
+.image-preview {
+    margin-top: 10px;
+}
+
+.image-preview img {
+    max-width: 150px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+
+/* Events Grid */
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.event-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+}
+
+.event-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.event-info {
+    padding: 15px;
+}
+
+.event-info h3 {
+    margin-bottom: 8px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #222;
+}
+
+.event-info p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.btn-view-event {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #2196f3;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.btn-view-event:hover {
+    background: #1976d2;
+}
+
+
+/* Admin Buttons */
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.admin-actions button {
+    flex: 1;
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.admin-actions button:first-child {
+    background: #ffc107;
+    color: #333;
+}
+
+.admin-actions button:first-child:hover {
+    background: #e0a800;
+}
+
+.admin-actions button:last-child {
+    background: #f44336;
+    color: white;
+}
+
+.admin-actions button:last-child:hover {
+    background: #d32f2f;
+}
+
+
+/* Modal */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal {
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    animation: slideDown 0.3s ease;
+}
+
+.modal h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.modal-footer button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.modal-footer button:first-child {
+    background: #4caf50;
+    color: white;
+}
+
+.modal-footer button:first-child:hover {
+    background: #388e3c;
+}
+
+.modal-footer button:last-child {
+    background: #ddd;
+}
+
+
+/* Animations */
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,29 @@
+.btn-join {
+    background: #28a745;
+    color: #fff;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-join:hover {
+    background: #218838;
+}
+
+.btn-leave {
+    background: #dc3545;
+    color: #fff;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-leave:hover {
+    background: #c82333;
+}
