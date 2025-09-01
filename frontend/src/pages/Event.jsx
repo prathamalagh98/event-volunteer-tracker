@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./Events.css";
 
 // Replace with your deployed backend URL
-const API_BASE = "http://192.168.1.72:5000/api";
+const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
