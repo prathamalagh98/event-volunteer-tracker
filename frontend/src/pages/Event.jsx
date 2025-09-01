@@ -4,7 +4,6 @@ import "./Events.css";
 
 // Backend API base
 const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
-const IMAGE_BASE = "https://event-volunteer-tracker.onrender.com";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -39,10 +38,8 @@ const Events = () => {
           : `${API_BASE}/events`;
 
         const res = await fetch(url);
-        console.log("Fetch status:", res.status);
         if (!res.ok) throw new Error(`Failed to fetch events: ${res.status}`);
         const data = await res.json();
-        console.log("Events fetched:", data);
         setEvents(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Fetch events error:", err);
@@ -60,11 +57,30 @@ const Events = () => {
     setPreview(null);
   };
 
+  // ---- Upload image to Cloudinary ----
+  const uploadToCloudinary = async (file) => {
+    if (!file) return null;
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary preset
+    data.append("cloud_name", "YOUR_CLOUD_NAME"); // replace with your Cloudinary cloud name
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`,
+      { method: "POST", body: data }
+    );
+    const result = await res.json();
+    return result.secure_url;
+  };
+
   // ---- Add Event ----
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
+      let imageUrl = null;
+      if (imageFile) imageUrl = await uploadToCloudinary(imageFile);
+
       const fd = new FormData();
       fd.append("title", newEvent.title);
       fd.append("description", newEvent.description);
@@ -73,7 +89,7 @@ const Events = () => {
         newEvent.date ? new Date(newEvent.date).toISOString() : ""
       );
       fd.append("location", newEvent.location);
-      if (imageFile) fd.append("image", imageFile);
+      if (imageUrl) fd.append("image", imageUrl);
 
       const res = await fetch(`${API_BASE}/events`, {
         method: "POST",
@@ -112,7 +128,7 @@ const Events = () => {
       ...event,
       date: event.date ? new Date(event.date).toISOString().split("T")[0] : "",
     });
-    setEditPreview(event.image ? `${IMAGE_BASE}${event.image}` : null);
+    setEditPreview(event.image || null);
     setEditImageFile(null);
   };
 
@@ -126,6 +142,9 @@ const Events = () => {
     if (!editingEvent) return;
     setSaving(true);
     try {
+      let imageUrl = editingEvent.image; // keep old image if not changed
+      if (editImageFile) imageUrl = await uploadToCloudinary(editImageFile);
+
       const fd = new FormData();
       fd.append("title", editingEvent.title);
       fd.append("description", editingEvent.description);
@@ -134,7 +153,7 @@ const Events = () => {
         editingEvent.date ? new Date(editingEvent.date).toISOString() : ""
       );
       fd.append("location", editingEvent.location);
-      if (editImageFile) fd.append("image", editImageFile);
+      if (imageUrl) fd.append("image", imageUrl);
 
       const res = await fetch(`${API_BASE}/events/${editingEvent._id}`, {
         method: "PUT",
@@ -251,7 +270,7 @@ const Events = () => {
           events.map((event) => (
             <div key={event._id} className="event-card">
               <img
-                src={event.image ? `${IMAGE_BASE}${event.image}` : "/video/CleanPark.jpg"}
+                src={event.image || "/video/CleanPark.jpg"}
                 alt={event.title}
                 className="event-image"
               />
