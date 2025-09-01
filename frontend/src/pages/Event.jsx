@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Events.css";
 
-// Replace with your deployed backend URL
+// Backend API base
 const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
 
 const Events = () => {
@@ -10,9 +10,9 @@ const Events = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const isAdmin = true; // admin flag
+  const isAdmin = true; // admin functionalities
 
-  // Add Event state
+  // Add Event form state
   const [showAddForm, setShowAddForm] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -29,8 +29,6 @@ const Events = () => {
   const [editImageFile, setEditImageFile] = useState(null);
   const [editPreview, setEditPreview] = useState(null);
 
-  const adminToken = ""; // optional JWT token
-
   // ---- Fetch events ----
   useEffect(() => {
     const fetchEvents = async () => {
@@ -39,23 +37,19 @@ const Events = () => {
           ? `${API_BASE}/events/with-volunteers`
           : `${API_BASE}/events`;
 
-        const res = await fetch(url, {
-          headers:
-            isAdmin && adminToken ? { Authorization: `Bearer ${adminToken}` } : {},
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch events");
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Failed to fetch events: ${res.status}`);
         const data = await res.json();
-        setEvents(data);
+        setEvents(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error(err);
+        console.error("Fetch events error:", err);
         setError("Unable to load events. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
     fetchEvents();
-  }, [isAdmin, adminToken]);
+  }, [isAdmin]);
 
   const resetAddForm = () => {
     setNewEvent({ title: "", description: "", date: "", location: "" });
@@ -63,11 +57,30 @@ const Events = () => {
     setPreview(null);
   };
 
+  // ---- Upload image to Cloudinary ----
+  const uploadToCloudinary = async (file) => {
+    if (!file) return null;
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary preset
+    data.append("cloud_name", "YOUR_CLOUD_NAME"); // replace with your Cloudinary cloud name
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`,
+      { method: "POST", body: data }
+    );
+    const result = await res.json();
+    return result.secure_url;
+  };
+
   // ---- Add Event ----
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
+      let imageUrl = null;
+      if (imageFile) imageUrl = await uploadToCloudinary(imageFile);
+
       const fd = new FormData();
       fd.append("title", newEvent.title);
       fd.append("description", newEvent.description);
@@ -76,7 +89,7 @@ const Events = () => {
         newEvent.date ? new Date(newEvent.date).toISOString() : ""
       );
       fd.append("location", newEvent.location);
-      if (imageFile) fd.append("image", imageFile);
+      if (imageUrl) fd.append("image", imageUrl);
 
       const res = await fetch(`${API_BASE}/events`, {
         method: "POST",
@@ -89,7 +102,7 @@ const Events = () => {
       setShowAddForm(false);
       resetAddForm();
     } catch (err) {
-      console.error(err);
+      console.error("Add event error:", err);
       alert("Failed to create event");
     } finally {
       setSaving(false);
@@ -104,7 +117,7 @@ const Events = () => {
       if (!res.ok) throw new Error("Delete failed");
       setEvents((prev) => prev.filter((e) => e._id !== id));
     } catch (err) {
-      console.error(err);
+      console.error("Delete event error:", err);
       alert("Failed to delete event");
     }
   };
@@ -129,6 +142,9 @@ const Events = () => {
     if (!editingEvent) return;
     setSaving(true);
     try {
+      let imageUrl = editingEvent.image; // keep old image if not changed
+      if (editImageFile) imageUrl = await uploadToCloudinary(editImageFile);
+
       const fd = new FormData();
       fd.append("title", editingEvent.title);
       fd.append("description", editingEvent.description);
@@ -137,7 +153,7 @@ const Events = () => {
         editingEvent.date ? new Date(editingEvent.date).toISOString() : ""
       );
       fd.append("location", editingEvent.location);
-      if (editImageFile) fd.append("image", editImageFile);
+      if (imageUrl) fd.append("image", imageUrl);
 
       const res = await fetch(`${API_BASE}/events/${editingEvent._id}`, {
         method: "PUT",
@@ -146,12 +162,10 @@ const Events = () => {
       if (!res.ok) throw new Error("Update failed");
 
       const updated = await res.json();
-      setEvents((prev) =>
-        prev.map((e) => (e._id === updated._id ? updated : e))
-      );
+      setEvents((prev) => prev.map((e) => (e._id === updated._id ? updated : e)));
       closeEdit();
     } catch (err) {
-      console.error(err);
+      console.error("Edit event error:", err);
       alert("Failed to update event");
     } finally {
       setSaving(false);
@@ -255,9 +269,11 @@ const Events = () => {
         ) : (
           events.map((event) => (
             <div key={event._id} className="event-card">
-              {event.image && (
-                <img src={event.image} alt={event.title} className="event-image" />
-              )}
+              <img
+                src={event.image || "/video/CleanPark.jpg"}
+                alt={event.title}
+                className="event-image"
+              />
               <div className="event-info">
                 <h3>{event.title}</h3>
                 <p>{event.description}</p>
@@ -305,10 +321,7 @@ const Events = () => {
               <textarea
                 value={editingEvent.description}
                 onChange={(e) =>
-                  setEditingEvent({
-                    ...editingEvent,
-                    description: e.target.value,
-                  })
+                  setEditingEvent({ ...editingEvent, description: e.target.value })
                 }
               />
             </div>
