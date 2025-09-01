@@ -4,6 +4,7 @@ import "./Events.css";
 
 // Backend API base
 const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
+const IMAGE_BASE = "https://event-volunteer-tracker.onrender.com";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -111,7 +112,7 @@ const Events = () => {
       ...event,
       date: event.date ? new Date(event.date).toISOString().split("T")[0] : "",
     });
-    setEditPreview(event.image ? `${API_BASE}${event.image}` : null);
+    setEditPreview(event.image ? `${IMAGE_BASE}${event.image}` : null);
     setEditImageFile(null);
   };
 
@@ -250,7 +251,7 @@ const Events = () => {
           events.map((event) => (
             <div key={event._id} className="event-card">
               <img
-                src={event.image ? `${API_BASE}${event.image}` : "/video/CleanPark.jpg"}
+                src={event.image ? `${IMAGE_BASE}${event.image}` : "/video/CleanPark.jpg"}
                 alt={event.title}
                 className="event-image"
               />
