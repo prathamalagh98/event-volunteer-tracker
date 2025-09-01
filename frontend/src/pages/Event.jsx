@@ -2,19 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Events.css";
 
-// Replace with your deployed backend URL
-const API_BASE =  "http://192.168.1.72:5000/api";
-
+// Correct backend API base
+const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Admin flag (hardcoded for now)
-  const isAdmin = true;
+  const isAdmin = true; // admin functionalities
 
-  // Add form state
+  // Add Event form state
   const [showAddForm, setShowAddForm] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -26,13 +24,10 @@ const Events = () => {
   const [preview, setPreview] = useState(null);
   const [saving, setSaving] = useState(false);
 
-  // Edit state
+  // Edit Event state
   const [editingEvent, setEditingEvent] = useState(null);
   const [editImageFile, setEditImageFile] = useState(null);
   const [editPreview, setEditPreview] = useState(null);
-
-  // Optional: admin JWT token if required by backend
-  const adminToken = ""; // put JWT here if needed
 
   // ---- Fetch events ----
   useEffect(() => {
@@ -42,23 +37,19 @@ const Events = () => {
           ? `${API_BASE}/events/with-volunteers`
           : `${API_BASE}/events`;
 
-        const res = await fetch(url, {
-          headers:
-            isAdmin && adminToken ? { Authorization: `Bearer ${adminToken}` } : {},
-        });
-
+        const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch events");
         const data = await res.json();
-        setEvents(data);
+        setEvents(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error(err);
+        console.error("Fetch events error:", err);
         setError("Unable to load events. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
     fetchEvents();
-  }, [isAdmin, adminToken]);
+  }, [isAdmin]);
 
   const resetAddForm = () => {
     setNewEvent({ title: "", description: "", date: "", location: "" });
@@ -92,7 +83,7 @@ const Events = () => {
       setShowAddForm(false);
       resetAddForm();
     } catch (err) {
-      console.error(err);
+      console.error("Add event error:", err);
       alert("Failed to create event");
     } finally {
       setSaving(false);
@@ -107,7 +98,7 @@ const Events = () => {
       if (!res.ok) throw new Error("Delete failed");
       setEvents((prev) => prev.filter((e) => e._id !== id));
     } catch (err) {
-      console.error(err);
+      console.error("Delete event error:", err);
       alert("Failed to delete event");
     }
   };
@@ -118,7 +109,7 @@ const Events = () => {
       ...event,
       date: event.date ? new Date(event.date).toISOString().split("T")[0] : "",
     });
-    setEditPreview(event.image || null);
+    setEditPreview(event.image ? `${API_BASE}${event.image}` : null);
     setEditImageFile(null);
   };
 
@@ -149,12 +140,10 @@ const Events = () => {
       if (!res.ok) throw new Error("Update failed");
 
       const updated = await res.json();
-      setEvents((prev) =>
-        prev.map((e) => (e._id === updated._id ? updated : e))
-      );
+      setEvents((prev) => prev.map((e) => (e._id === updated._id ? updated : e)));
       closeEdit();
     } catch (err) {
-      console.error(err);
+      console.error("Edit event error:", err);
       alert("Failed to update event");
     } finally {
       setSaving(false);
@@ -259,11 +248,7 @@ const Events = () => {
           events.map((event) => (
             <div key={event._id} className="event-card">
               <img
-                src={
-                  event.image
-                    ? `https://event-volunteer-tracker.onrender.com${event.image}`
-                    : "/video/CleanPark.jpg"
-                }
+                src={event.image ? `${API_BASE}${event.image}` : "/video/CleanPark.jpg"}
                 alt={event.title}
                 className="event-image"
               />
@@ -277,7 +262,6 @@ const Events = () => {
                 <p>
                   <strong>Location:</strong> {event.location}
                 </p>
-
                 <div className="card-actions">
                   <Link to={`/events/${event._id}`} className="btn-view-event">
                     View Details
@@ -285,9 +269,7 @@ const Events = () => {
                   {isAdmin && (
                     <div className="admin-actions">
                       <button onClick={() => openEdit(event)}>Edit</button>
-                      <button onClick={() => handleDelete(event._id)}>
-                        Delete
-                      </button>
+                      <button onClick={() => handleDelete(event._id)}>Delete</button>
                     </div>
                   )}
                 </div>
@@ -317,10 +299,7 @@ const Events = () => {
               <textarea
                 value={editingEvent.description}
                 onChange={(e) =>
-                  setEditingEvent({
-                    ...editingEvent,
-                    description: e.target.value,
-                  })
+                  setEditingEvent({ ...editingEvent, description: e.target.value })
                 }
               />
             </div>
