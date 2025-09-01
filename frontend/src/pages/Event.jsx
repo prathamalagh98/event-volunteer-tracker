@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Events.css";
 
-// Correct backend API base
+// Backend API base
 const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
 
 const Events = () => {
@@ -38,8 +38,10 @@ const Events = () => {
           : `${API_BASE}/events`;
 
         const res = await fetch(url);
-        if (!res.ok) throw new Error("Failed to fetch events");
+        console.log("Fetch status:", res.status);
+        if (!res.ok) throw new Error(`Failed to fetch events: ${res.status}`);
         const data = await res.json();
+        console.log("Events fetched:", data);
         setEvents(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Fetch events error:", err);
