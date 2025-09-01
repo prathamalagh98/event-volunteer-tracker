@@ -1009,12 +1009,21 @@ const handleChatSubmit = (e) => {
                 Connecting volunteers with opportunities to make a difference in
                 their communities.
               </p>
-              <div className="social-links">
-                <a href="#" aria-label="Facebook"><i className="fab fa-facebook"></i></a>
-                <a href="#" aria-label="Twitter"><i className="fab fa-twitter"></i></a>
-                <a href="#" aria-label="Instagram"><i className="fab fa-instagram"></i></a>
-                <a href="#" aria-label="LinkedIn"><i className="fab fa-linkedin"></i></a>
-              </div>
+            <div className="social-links">
+  <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+    <i className="fab fa-facebook"></i>
+  </a>
+  <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+    <i className="fab fa-twitter"></i>
+  </a>
+  <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+    <i className="fab fa-instagram"></i>
+  </a>
+  <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+    <i className="fab fa-linkedin"></i>
+  </a>
+</div>
+
             </div>
             <div className="footer-section">
               <h4>Quick Links</h4>
