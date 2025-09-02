@@ -12,8 +12,11 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// ---- Serve uploads folder as static ----
+router.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
 // ---- Create Event ----
-router.post("/", upload.single("image"), async(req, res) => {
+router.post("/", upload.single("image"), async (req, res) => {
     try {
         const { title, description, date, location } = req.body;
         const newEvent = await Event.create({
@@ -31,7 +34,7 @@ router.post("/", upload.single("image"), async(req, res) => {
 });
 
 // ---- Get all events ----
-router.get("/", async(req, res) => {
+router.get("/", async (req, res) => {
     try {
         const events = await Event.find().sort({ date: 1 });
         res.json(events);
@@ -42,7 +45,7 @@ router.get("/", async(req, res) => {
 });
 
 // ---- Get events with volunteers (admin) ----
-router.get("/with-volunteers", async(req, res) => {
+router.get("/with-volunteers", async (req, res) => {
     try {
         const events = await Event.find().sort({ date: 1 }).populate("volunteers", "name email");
         res.json(events);
@@ -53,7 +56,7 @@ router.get("/with-volunteers", async(req, res) => {
 });
 
 // ---- Get single event ----
-router.get("/:id", async(req, res) => {
+router.get("/:id", async (req, res) => {
     try {
         const event = await Event.findById(req.params.id).populate("volunteers", "name email");
         if (!event) return res.status(404).json({ message: "Event not found" });
@@ -65,7 +68,7 @@ router.get("/:id", async(req, res) => {
 });
 
 // ---- Update Event ----
-router.put("/:id", upload.single("image"), async(req, res) => {
+router.put("/:id", upload.single("image"), async (req, res) => {
     try {
         const { title, description, date, location } = req.body;
         const updatedData = { title, description, date, location };
@@ -80,7 +83,7 @@ router.put("/:id", upload.single("image"), async(req, res) => {
 });
 
 // ---- Delete Event ----
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", async (req, res) => {
     try {
         await Event.findByIdAndDelete(req.params.id);
         res.json({ message: "Event deleted" });
@@ -91,11 +94,13 @@ router.delete("/:id", async(req, res) => {
 });
 
 // ---- Join Event ----
-router.post("/:id/join", async(req, res) => {
+router.post("/:id/join", async (req, res) => {
     try {
         const { userId } = req.body;
         const updated = await Event.findByIdAndUpdate(
-            req.params.id, { $addToSet: { volunteers: userId } }, { new: true }
+            req.params.id,
+            { $addToSet: { volunteers: userId } },
+            { new: true }
         ).populate("volunteers", "name email");
 
         if (!updated) return res.status(404).json({ message: "Event not found" });
@@ -107,11 +112,13 @@ router.post("/:id/join", async(req, res) => {
 });
 
 // ---- Leave Event ----
-router.post("/:id/leave", async(req, res) => {
+router.post("/:id/leave", async (req, res) => {
     try {
         const { userId } = req.body;
         const updated = await Event.findByIdAndUpdate(
-            req.params.id, { $pull: { volunteers: userId } }, { new: true }
+            req.params.id,
+            { $pull: { volunteers: userId } },
+            { new: true }
         ).populate("volunteers", "name email");
 
         if (!updated) return res.status(404).json({ message: "Event not found" });
