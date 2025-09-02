@@ -1,10 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./AdminVolunteer.css";
+import "./Events.css"; // Import the navbar styles
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
-// <-- change this to your public backend (ngrok / deployed URL) or set REACT_APP_API_URL in env
+// Use the correct API base URL
 const API_BASE = process.env.REACT_APP_API_URL || "https://event-volunteer-tracker.onrender.com/api";
+const IMAGE_BASE = "https://event-volunteer-tracker.onrender.com";
 
 const AdminVolunteers = () => {
   const authContext = useContext(AuthContext);
@@ -31,7 +33,8 @@ const AdminVolunteers = () => {
     (async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_BASE}/api/events/with-volunteers`, { signal });
+        // Fixed the API URL - removed the duplicate /api
+        const res = await fetch(`${API_BASE}/events/with-volunteers`, { signal });
         if (!res.ok) {
           // server responded with non-2xx
           throw new Error(`Server error: ${res.status} ${res.statusText}`);
@@ -119,11 +122,11 @@ const AdminVolunteers = () => {
           <p>No events found</p>
         ) : (
           events.map((ev, idx) => {
-            // safe image handling: if ev.image is an absolute URL use it, else prefix with API_BASE
+            // Fixed image handling
             const imgSrc = ev?.image
-              ? (typeof ev.image === "string" && (ev.image.startsWith("http://") || ev.image.startsWith("https://")))
-                ? ev.image
-                : `${API_BASE}${ev.image}`
+              ? (ev.image.startsWith("http://") || ev.image.startsWith("https://") || ev.image.startsWith("/uploads/"))
+                ? `${IMAGE_BASE}${ev.image}`
+                : `${IMAGE_BASE}/uploads/${ev.image}`
               : "/video/CleanPark.jpg";
 
             return (
@@ -143,13 +146,17 @@ const AdminVolunteers = () => {
                   </p>
                   <p><b>Total Volunteers:</b> {ev.volunteers?.length || 0}</p>
 
-                  <ul>
-                    {(ev.volunteers || []).map((v, i) => (
-                      <li key={v._id || v.email || i}>
-                        {v.name ? `${v.name} (${v.email})` : (typeof v === "string" ? v : JSON.stringify(v))}
-                      </li>
-                    ))}
-                  </ul>
+                  {ev.volunteers && ev.volunteers.length > 0 ? (
+                    <ul>
+                      {ev.volunteers.map((v, i) => (
+                        <li key={v._id || v.email || i}>
+                          {v.name ? `${v.name} (${v.email})` : (typeof v === "string" ? v : JSON.stringify(v))}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No volunteers registered for this event yet.</p>
+                  )}
                 </div>
               </div>
             );
