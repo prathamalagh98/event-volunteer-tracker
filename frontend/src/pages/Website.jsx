@@ -632,7 +632,7 @@ const [chatMessages, setChatMessages] = useState([
           <div className="success-grid">
             <div className="success-card animate-zoom">
               <div className="success-image-container">
-              <img src={story1} alt="Community Clean-Up Drive" />
+             <img src="/video/story1.png" alt="Community Clean-Up Drive" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
