@@ -495,10 +495,7 @@ const handleChatSubmit = (e) => {
           <span></span>
           <span></span>
           {user?.role === "volunteer" && (
-  <>
-    <li><Link to="/volunteer">Dashboard</Link></li>
-    <li><Link to="/volunteer/events">Events</Link></li>
-  </>
+
 )}
 
         </button>
