@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 // <-- change this to your public backend (ngrok / deployed URL) or set REACT_APP_API_URL in env
-const API_BASE = process.env.REACT_APP_API_URL || "https://9ea8a5bd620d.ngrok-free.app";
+const API_BASE = process.env.REACT_APP_API_URL || "https://event-volunteer-tracker.onrender.com/api";
 
 const AdminVolunteers = () => {
   const authContext = useContext(AuthContext);
