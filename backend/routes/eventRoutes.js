@@ -13,15 +13,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ---- Serve uploads folder as static ----
+// Serve uploads from the root, not under /api
 router.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // ---- Create Event ----
 router.post("/", upload.single("image"), async (req, res) => {
   try {
-    const { title, description, date, location, image } = req.body;
+    const { title, description, date, location } = req.body;
 
-    // Priority: Cloudinary URL > local upload
-    const imageUrl = image || (req.file ? `/uploads/${req.file.filename}` : null);
+    // Use the correct path without the leading slash to avoid double path issues
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     const newEvent = await Event.create({
       title,
@@ -75,12 +76,13 @@ router.get("/:id", async (req, res) => {
 // ---- Update Event ----
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
-    const { title, description, date, location, image } = req.body;
+    const { title, description, date, location } = req.body;
 
     const updatedData = { title, description, date, location };
 
-    if (image) updatedData.image = image;
-    else if (req.file) updatedData.image = `/uploads/${req.file.filename}`;
+    if (req.file) {
+      updatedData.image = `/uploads/${req.file.filename}`;
+    }
 
     const updatedEvent = await Event.findByIdAndUpdate(req.params.id, updatedData, { new: true });
     res.json(updatedEvent);
