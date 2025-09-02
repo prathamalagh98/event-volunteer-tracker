@@ -882,6 +882,25 @@ const [chatMessages, setChatMessages] = useState([
           </div>
         </div>
       </section>
+      {/* 🔹 Motivational Banner Video Section */}
+<section className="banner-video-section">
+  <video
+    className="banner-video"
+    autoPlay
+    loop
+    muted
+    playsInline
+  >
+    <source src="/video/Banner video.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+  <div className="banner-overlay">
+    <h2 className="banner-text">
+      Together, we can create a better tomorrow 🌍
+    </h2>
+  </div>
+</section>
+
 
       {/* FAQ Section */}
       <section className="faq-section">
