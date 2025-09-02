@@ -667,39 +667,28 @@ const [chatMessages, setChatMessages] = useState([
         </div>
       </section>
 
-      {/* Volunteer Spotlight Section */}
-      <section className="volunteer-spotlight">
-        <div className="container">
-          <h2>Volunteer Spotlight</h2>
-          <p className="section-description">Meet some of our amazing volunteers making a difference</p>
-          
-          <div className="spotlight-carousel">
-            {volunteerSpotlights.map(volunteer => (
-              <div key={volunteer.id} className="spotlight-card animate-on-scroll">
-                <div className="spotlight-image">
-                  <img src={volunteer.video} alt={volunteer.Rahul} />
-                  <div className="volunteer-badges">
-                    {volunteer.badges.map((badge, index) => (
-                      <span key={index} className="badge">{badge}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="spotlight-content">
-                  <h3>{volunteer.Vikas}</h3>
-                  <p className="volunteer-role">{volunteer.role}</p>
-                  <p className="volunteer-quote">"{volunteer.quote}"</p>
-                  <p className="volunteer-contributions">{volunteer.contributions}</p>
-                  
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '85%'}}></div>
-                    <span>85% impact score</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+<div key={volunteer.id} className="spotlight-card animate-on-scroll">
+  <div className="spotlight-image">
+    <img src={volunteer.image} alt={volunteer.name} />
+    <div className="volunteer-badges">
+      {volunteer.badges.map((badge, index) => (
+        <span key={index} className="badge">{badge}</span>
+      ))}
+    </div>
+  </div>
+  <div className="spotlight-content">
+    <h3>{volunteer.name}</h3>
+    <p className="volunteer-role">{volunteer.role}</p>
+    <p className="volunteer-quote">"{volunteer.quote}"</p>
+    <p className="volunteer-contributions">{volunteer.contributions}</p>
+
+    <div className="progress-bar">
+      <div className="progress-fill" style={{ width: '85%' }}></div>
+      <span>85% impact score</span>
+    </div>
+  </div>
+</div>
+
 
       {/* How It Works Section */}
       <section className="how-it-works-section">
