@@ -1,8 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Website.css";
-import { useNavigate } from "react-router-dom";
 import { getBotReply, quickSuggestions } from "../chatbot/botLogic";
 
 const Website = () => {
@@ -21,52 +20,36 @@ const Website = () => {
     { id: 2, text: "Your volunteer hours have been updated", read: false },
     { id: 3, text: "Welcome to our community!", read: true }
   ]);
-  
   const [showChat, setShowChat] = useState(false);
-  const navigate = useNavigate();
   const [chatMessages, setChatMessages] = useState([
     { id: 1, text: "Hello! How can we help you today?", sender: "support" }
   ]);
   const [message, setMessage] = useState("");
-  
+  const [stats, setStats] = useState({ volunteers: 0, events: 0, hours: 0, communities: 0 });
+  const [liveCounter, setLiveCounter] = useState(5127);
+
   const videoRef = useRef(null);
   const chatContainerRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Statistics counter
-  const [stats, setStats] = useState({
-    volunteers: 0,
-    events: 0,
-    hours: 0,
-    communities: 0
-  });
-
-  // Live volunteer counter (simulated)
-  const [liveCounter, setLiveCounter] = useState(5127);
-  
-  // Volunteer spotlight data
+  // Volunteer Spotlight Data
   const volunteerSpotlights = [
     {
-      id: 1,
-      name: "Emma Rodriguez",
-      role: "Community Volunteer",
+      id: 1, name: "Emma Rodriguez", role: "Community Volunteer",
       image: "/images/volunteer1.jpg",
       quote: "This platform helped me find meaningful opportunities that match my skills and schedule.",
       contributions: "120+ hours volunteered",
       badges: ["Eco Warrior", "Community Champion", "Top Contributor"]
     },
     {
-      id: 2,
-      name: "James Wilson",
-      role: "Event Organizer",
+      id: 2, name: "James Wilson", role: "Event Organizer",
       image: "/images/volunteer2.jpg",
       quote: "Managing volunteers has never been easier. The tracking and communication tools are exceptional.",
       contributions: "Organized 15+ events",
       badges: ["Leadership", "Event Master", "Community Builder"]
     },
     {
-      id: 3,
-      name: "Sophia Chen",
-      role: "Youth Coordinator",
+      id: 3, name: "Sophia Chen", role: "Youth Coordinator",
       image: "/images/volunteer3.jpg",
       quote: "I've been able to engage our youth group in community service like never before.",
       contributions: "Mobilized 50+ students",
@@ -74,7 +57,7 @@ const Website = () => {
     }
   ];
 
-  // Event locations for map
+  // Event Locations
   const eventLocations = [
     { id: 1, name: "Beach Cleanup", lat: 40.7128, lng: -74.0060, volunteers: 24 },
     { id: 2, name: "Food Bank", lat: 34.0522, lng: -118.2437, volunteers: 18 },
@@ -82,291 +65,134 @@ const Website = () => {
     { id: 4, name: "Senior Support", lat: 29.7604, lng: -95.3698, volunteers: 12 }
   ];
 
-  // Resource library
+  // Resources
   const resources = [
-    { 
-      id: 1, 
-      title: "Volunteer Handbook", 
-      description: "Complete guide for volunteers", 
-      icon: "fas fa-book",
-      link: "/resources/handbook.pdf"
-    },
-    { 
-      id: 2, 
-      title: "Event Planning Toolkit", 
-      description: "Resources for organizing successful events", 
-      icon: "fas fa-toolbox",
-      link: "/resources/toolkit.zip"
-    },
-    { 
-      id: 3, 
-      title: "Safety Guidelines", 
-      description: "Important safety information for all events", 
-      icon: "fas fa-first-aid",
-      link: "/resources/safety.pdf"
-    },
-    { 
-      id: 4, 
-      title: "Training Videos", 
-      description: "Video tutorials for volunteers and organizers", 
-      icon: "fas fa-video",
-      link: "/resources/videos"
-    }
+    { id: 1, title: "Volunteer Handbook", description: "Complete guide for volunteers", icon: "fas fa-book", link: "/resources/handbook.pdf" },
+    { id: 2, title: "Event Planning Toolkit", description: "Resources for organizing successful events", icon: "fas fa-toolbox", link: "/resources/toolkit.zip" },
+    { id: 3, title: "Safety Guidelines", description: "Important safety information for all events", icon: "fas fa-first-aid", link: "/resources/safety.pdf" },
+    { id: 4, title: "Training Videos", description: "Video tutorials for volunteers and organizers", icon: "fas fa-video", link: "/resources/videos" }
   ];
 
-  // FAQ data
+  // FAQ Data
   const faqs = [
-    {
-      question: "How do I sign up as a volunteer?",
-      answer: "Simply click on the 'Register' button at the top of the page, fill out your information, and select 'Volunteer' as your role. You'll then be able to browse and sign up for events."
-    },
-    {
-      question: "Can organizations create events?",
-      answer: "Yes! Organizations can register and create events. After registration, you'll need to verify your organization status, then you can start creating and managing events."
-    },
-    {
-      question: "Is there a mobile app available?",
-      answer: "Currently, we have a mobile-responsive website that works on all devices. We're developing a dedicated mobile app that will be released later this year."
-    },
-    {
-      question: "How are volunteer hours tracked?",
-      answer: "Volunteer hours are tracked through event check-ins managed by organizers. You can also self-report hours for approval, and all hours are visible in your personal dashboard."
-    },
-    {
-      question: "Are there any fees to use the platform?",
-      answer: "The platform is completely free for volunteers. Organizations may have premium features available, but basic event creation and volunteer management are free."
-    }
+    { question: "How do I sign up as a volunteer?", answer: "Simply click on the 'Register' button at the top of the page..." },
+    { question: "Can organizations create events?", answer: "Yes! Organizations can register and create events..." },
+    { question: "Is there a mobile app available?", answer: "Currently, we have a mobile-responsive website..." },
+    { question: "How are volunteer hours tracked?", answer: "Volunteer hours are tracked through event check-ins..." },
+    { question: "Are there any fees to use the platform?", answer: "The platform is completely free for volunteers..." }
   ];
 
-  // Video autoplay + force loop
+  // Video autoplay + loop fix
   useEffect(() => {
     const video = videoRef.current;
-
     if (video) {
-      // Try autoplay
-      video.play().catch((error) => {
-        console.log("Autoplay prevented:", error);
-      });
-
-      // Force loop in case the browser ignores 'loop'
-      const handleEnded = () => {
-        video.currentTime = 0;
-        video.play();
-      };
-
+      video.play().catch(err => console.log("Autoplay blocked:", err));
+      const handleEnded = () => { video.currentTime = 0; video.play(); };
       video.addEventListener("ended", handleEnded);
-
-      // Cleanup listener
-      return () => {
-        video.removeEventListener("ended", handleEnded);
-      };
+      return () => video.removeEventListener("ended", handleEnded);
     }
   }, []);
 
-  // Scroll effect
+  // Scroll effects
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-      
-      // Show/hide back to top button
       const backToTop = document.querySelector('.back-to-top');
       if (backToTop) {
-        if (window.scrollY > 500) {
-          backToTop.classList.add('visible');
-        } else {
-          backToTop.classList.remove('visible');
-        }
+        backToTop.classList.toggle('visible', window.scrollY > 500);
       }
-      
-      // Animate elements on scroll
       animateOnScroll();
     };
-    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Animate elements when they come into view
   const animateOnScroll = () => {
-    const elements = document.querySelectorAll('.animate-on-scroll');
-    elements.forEach(element => {
-      const elementPosition = element.getBoundingClientRect().top;
-      const screenPosition = window.innerHeight / 1.3;
-      
-      if (elementPosition < screenPosition) {
-        element.classList.add('animated');
-      }
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight / 1.3) el.classList.add('animated');
     });
   };
 
-  // Statistics counter animation
+  // Stats Counter Animation
   useEffect(() => {
     const interval = setInterval(() => {
       setStats(prev => ({
-        volunteers: prev.volunteers < 5000 ? prev.volunteers + 25 : 5000,
-        events: prev.events < 250 ? prev.events + 1 : 250,
-        hours: prev.hours < 10000 ? prev.hours + 100 : 10000,
-        communities: prev.communities < 50 ? prev.communities + 1 : 50
+        volunteers: Math.min(prev.volunteers + 25, 5000),
+        events: Math.min(prev.events + 1, 250),
+        hours: Math.min(prev.hours + 100, 10000),
+        communities: Math.min(prev.communities + 1, 50)
       }));
     }, 100);
-
-    // Clean up interval after 3 seconds
-    const timeout = setTimeout(() => {
-      clearInterval(interval);
-    }, 3000);
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
+    const timeout = setTimeout(() => clearInterval(interval), 3000);
+    return () => { clearInterval(interval); clearTimeout(timeout); };
   }, []);
 
-  // Simulate live volunteer counter
+  // Live volunteer counter
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLiveCounter(prev => prev + Math.floor(Math.random() * 3));
-    }, 60000); // Update every minute
-    
+    const interval = setInterval(() => setLiveCounter(prev => prev + Math.floor(Math.random() * 3)), 60000);
     return () => clearInterval(interval);
   }, []);
 
-  // Toggle dark mode
+  // Dark Mode
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
+    document.body.classList.toggle('dark-mode', darkMode);
   }, [darkMode]);
 
-  // Scroll chat to bottom when new messages arrive
+  // Scroll chat to bottom
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
+    if (chatContainerRef.current) chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   }, [chatMessages]);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const toggleFAQ = (index) => {
-    setActiveFAQ(activeFAQ === index ? null : index);
-  };
-
-  const handleSubscribe = (e) => {
+  // Handlers
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleFAQ = (index) => setActiveFAQ(activeFAQ === index ? null : index);
+  const handleSubscribe = e => {
     e.preventDefault();
     if (email) {
-      // Here you would typically send the email to your backend
       console.log("Subscribed with email:", email);
-      setSubscribed(true);
-      setEmail("");
-      
-      // Reset after 3 seconds
-      setTimeout(() => {
-        setSubscribed(false);
-      }, 3000);
+      setSubscribed(true); setEmail("");
+      setTimeout(() => setSubscribed(false), 3000);
     }
   };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
-
-  const handleLanguageChange = (lang) => {
-    setLanguage(lang);
-    // In a real app, you would update all text content based on the selected language
-  };
-
-  const markNotificationAsRead = (id) => {
-    setNotifications(notifications.map(notification => 
-      notification.id === id ? {...notification, read: true} : notification
-    ));
-  };
-
-  const toggleChat = () => {
-    setShowChat(!showChat);
-  };
-
-  const handleChatSubmit = (e) => {
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleLanguageChange = (lang) => setLanguage(lang);
+  const markNotificationAsRead = id => setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+  const toggleChat = () => setShowChat(!showChat);
+  const handleChatSubmit = e => {
     e.preventDefault();
-    const text = message.trim();
-    if (!text) return;
-
-    // add user message
-    const userMsg = { id: Date.now(), text, sender: "user" };
-    setChatMessages((prev) => [...prev, userMsg]);
+    if (!message.trim()) return;
+    const userMsg = { id: Date.now(), text: message.trim(), sender: "user" };
+    setChatMessages(prev => [...prev, userMsg]);
     setMessage("");
-
-    // bot reply
-    const replyText = getBotReply(text);
-    setTimeout(() => {
-      setChatMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 1, text: replyText, sender: "bot" },
-      ]);
-    }, 600);
+    setTimeout(() => setChatMessages(prev => [...prev, { id: Date.now() + 1, text: getBotReply(userMsg.text), sender: "bot" }]), 600);
   };
-
-  const shareOnSocialMedia = (platform) => {
+  const shareOnSocialMedia = platform => {
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent("Check out this amazing volunteer platform!");
-    
-    let shareUrl;
-    switch(platform) {
-      case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        break;
-      case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-        break;
-      case 'linkedin':
-        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-        break;
-      default:
-        return;
-    }
-    
-    window.open(shareUrl, '_blank');
+    const shareUrls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`
+    };
+    if (shareUrls[platform]) window.open(shareUrls[platform], '_blank');
   };
 
   return (
     <div className="website-container">
       {/* Back to Top Button */}
-      <button 
-        className="back-to-top" 
-        onClick={scrollToTop}
-        aria-label="Back to top"
-      >
+      <button className="back-to-top" onClick={scrollToTop} aria-label="Back to top">
         <i className="fas fa-arrow-up"></i>
       </button>
 
       {/* Theme Toggle */}
-      <button 
-        className="theme-toggle"
-        onClick={() => setDarkMode(!darkMode)}
-        aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-      >
+      <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
         {darkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
       </button>
 
       {/* Language Toggle */}
       <div className="language-toggle">
-        <button 
-          className={language === 'en' ? 'active' : ''} 
-          onClick={() => handleLanguageChange('en')}
-        >
-          EN
-        </button>
-        <button 
-          className={language === 'es' ? 'active' : ''} 
-          onClick={() => handleLanguageChange('es')}
-        >
-          ES
-        </button>
+        <button className={language === 'en' ? 'active' : ''} onClick={() => handleLanguageChange('en')}>EN</button>
+        <button className={language === 'es' ? 'active' : ''} onClick={() => handleLanguageChange('es')}>ES</button>
       </div>
 
       {/* Live Support Chat */}
@@ -375,151 +201,55 @@ const Website = () => {
           <i className="fas fa-comments"></i>
           <span className="notification-dot"></span>
         </button>
-        
         <div className="chat-container">
           <div className="chat-header">
             <h3>Support Chat</h3>
-            <button className="chat-close" onClick={toggleChat}>
-              <i className="fas fa-times"></i>
-            </button>
+            <button className="chat-close" onClick={toggleChat}><i className="fas fa-times"></i></button>
           </div>
-          
           <div className="chat-messages" ref={chatContainerRef}>
-            {chatMessages.map(msg => (
-              <div key={msg.id} className={`message ${msg.sender}`}>
-                <p>{msg.text}</p>
-              </div>
-            ))}
+            {chatMessages.map(msg => <div key={msg.id} className={`message ${msg.sender}`}><p>{msg.text}</p></div>)}
           </div>
-          
-          {/* Quick Replies */}
           <div className="quick-replies">
-            {quickSuggestions.map((q) => (
-              <button
-                key={q.id}
-                type="button"
-                className="chip"
-                onClick={() => {
-                  // show user message
-                  const userMsg = { id: Date.now(), text: q.question, sender: "user" };
-                  setChatMessages((prev) => [...prev, userMsg]);
-
-                  // show bot reply
-                  const replyText = getBotReply(q.question);
-                  setTimeout(() => {
-                    setChatMessages((prev) => [
-                      ...prev,
-                      { id: Date.now() + 1, text: replyText, sender: "bot" },
-                    ]);
-                  }, 400);
-
-                  // optional: navigate
-                  if (q.navigate) navigate(q.navigate);
-                }}
-              >
-                {q.label}
-              </button>
+            {quickSuggestions.map(q => (
+              <button key={q.id} type="button" className="chip" onClick={() => {
+                const userMsg = { id: Date.now(), text: q.question, sender: "user" };
+                setChatMessages(prev => [...prev, userMsg]);
+                const replyText = getBotReply(q.question);
+                setTimeout(() => setChatMessages(prev => [...prev, { id: Date.now() + 1, text: replyText, sender: "bot" }]), 400);
+                if (q.navigate) navigate(q.navigate);
+              }}>{q.label}</button>
             ))}
           </div>
-          
           <form className="chat-input" onSubmit={handleChatSubmit}>
-            <input
-              type="text"
-              placeholder="Type your message..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button type="submit">
-              <i className="fas fa-paper-plane"></i>
-            </button>
+            <input type="text" placeholder="Type your message..." value={message} onChange={e => setMessage(e.target.value)} />
+            <button type="submit"><i className="fas fa-paper-plane"></i></button>
           </form>
-        </div>
-      </div>
-
-      {/* Notification Bell */}
-      <div className="notifications-wrapper">
-        <button className="notification-bell">
-          <i className="fas fa-bell"></i>
-          {notifications.filter(n => !n.read).length > 0 && (
-            <span className="notification-count">
-              {notifications.filter(n => !n.read).length}
-            </span>
-          )}
-        </button>
-        
-        <div className="notifications-dropdown">
-          <div className="notifications-header">
-            <h3>Notifications</h3>
-            <button className="mark-all-read">Mark all as read</button>
-          </div>
-          
-          <div className="notifications-list">
-            {notifications.map(notification => (
-              <div 
-                key={notification.id} 
-                className={`notification-item ${notification.read ? 'read' : 'unread'}`}
-                onClick={() => markNotificationAsRead(notification.id)}
-              >
-                <p>{notification.text}</p>
-                <span className="notification-time">2h ago</span>
-              </div>
-            ))}
-          </div>
-          
-          <div className="notifications-footer">
-            <a href="/notifications">View all notifications</a>
-          </div>
         </div>
       </div>
 
       {/* Navbar */}
       <nav className={`navbar ${scrolled ? "scrolled" : ""}`} aria-label="Main navigation">
         <div className="logo">
-          <img
-            src="/video/logo.png"
-            alt="Event Volunteer Tracker Logo"
-            className="logo-img spin-on-hover"
-          />
+          <img src="/video/logo.png" alt="Event Volunteer Tracker Logo" className="logo-img spin-on-hover" />
           <span className="logo-text">Event Volunteer Tracker</span>
         </div>
-        <button
-          className={`menu-toggle ${isMenuOpen ? "active" : ""}`}
-          onClick={toggleMenu}
-          aria-label="Toggle navigation menu"
-          aria-expanded={isMenuOpen}
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-          {user?.role === "volunteer" && (
-            <span className="volunteer-indicator"></span>
-          )}
+        <button className={`menu-toggle ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu} aria-label="Toggle navigation menu" aria-expanded={isMenuOpen}>
+          <span></span><span></span><span></span>
+          {user?.role === "volunteer" && <span className="volunteer-indicator"></span>}
         </button>
         <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
-          <li>
-            <Link to="/VolunteerEvent" onClick={() => setIsMenuOpen(false)}>Home</Link>
-          </li>
-          <li>
-            <Link to="/VolunteerEvents" onClick={() => setIsMenuOpen(false)}>Events</Link>
-          </li>
-          <li>
-            <Link to="/volunteers" onClick={() => setIsMenuOpen(false)}>Upcoming Events</Link>
-          </li>
+          <li><Link to="/VolunteerEvent" onClick={() => setIsMenuOpen(false)}>Home</Link></li>
+          <li><Link to="/VolunteerEvents" onClick={() => setIsMenuOpen(false)}>Events</Link></li>
+          <li><Link to="/volunteers" onClick={() => setIsMenuOpen(false)}>Upcoming Events</Link></li>
           {user ? (
             <>
               <li className="user-greeting">Hello, {user.name}</li>
-              <li>
-                <button onClick={logout} className="btn-logout">Logout</button>
-              </li>
+              <li><button onClick={logout} className="btn-logout">Logout</button></li>
             </>
           ) : (
             <>
-              <li>
-                <Link to="/" onClick={() => setIsMenuOpen(false)}>Login</Link>
-              </li>
-              <li>
-                <Link to="/" onClick={() => setIsMenuOpen(false)}>Register</Link>
-              </li>
+              <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Login</Link></li>
+              <li><Link to="/" onClick={() => setIsMenuOpen(false)}>Register</Link></li>
             </>
           )}
         </ul>
@@ -528,63 +258,32 @@ const Website = () => {
       {/* Hero Section with Video Background */}
       <header className="hero-section">
         <div className="video-background">
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="video-bg"
-            poster="/video/poster.jpg"
-          >
+          <video ref={videoRef} autoPlay muted loop playsInline className="video-bg" poster="/video/poster.jpg">
             <source src="/video/projector.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           <div className="video-overlay"></div>
         </div>
-
         <div className="hero-content animate-fade-in">
-          <div className="live-counter">
-            <i className="fas fa-users"></i>
-            <span>{liveCounter.toLocaleString()}</span> volunteers online now
-          </div>
-          
+          <div className="live-counter"><i className="fas fa-users"></i> <span>{liveCounter.toLocaleString()}</span> volunteers online now</div>
           <h1>Welcome to Event Volunteer Tracker</h1>
           <p>Join us to manage and participate in events that make a difference in your community.</p>
-          {!user && (
-            <div className="hero-buttons">
-              <Link to="/register" className="btn-register btn-animate">Get Started</Link>
-              <Link to="/events" className="btn-secondary btn-animate">Browse Events</Link>
-            </div>
-          )}
+          {!user && <div className="hero-buttons">
+            <Link to="/register" className="btn-register btn-animate">Get Started</Link>
+            <Link to="/events" className="btn-secondary btn-animate">Browse Events</Link>
+          </div>}
         </div>
-
-        <div className="scroll-indicator animate-bounce">
-          <span>Scroll Down</span>
-          <div className="arrow"></div>
-        </div>
+        <div className="scroll-indicator animate-bounce"><span>Scroll Down</span><div className="arrow"></div></div>
       </header>
 
-      {/* Statistics Section */}
+      {/* Stats Section */}
       <section className="stats-section">
         <div className="container">
           <div className="stats-grid">
-            <div className="stat-item">
-              <div className="stat-number" data-count="5000">{stats.volunteers.toLocaleString()}+</div>
-              <div className="stat-label">Volunteers</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number" data-count="250">{stats.events}+</div>
-              <div className="stat-label">Events</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number" data-count="10000">{stats.hours.toLocaleString()}+</div>
-              <div className="stat-label">Hours Contributed</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number" data-count="50">{stats.communities}+</div>
-              <div className="stat-label">Communities Served</div>
-            </div>
+            <div className="stat-item"><div className="stat-number">{stats.volunteers.toLocaleString()}+</div><div className="stat-label">Volunteers</div></div>
+            <div className="stat-item"><div className="stat-number">{stats.events}+</div><div className="stat-label">Events</div></div>
+            <div className="stat-item"><div className="stat-number">{stats.hours.toLocaleString()}+</div><div className="stat-label">Hours Contributed</div></div>
+            <div className="stat-item"><div className="stat-number">{stats.communities}+</div><div className="stat-label">Communities Served</div></div>
           </div>
         </div>
       </section>
@@ -1053,3 +752,8 @@ const Website = () => {
     </div>
   </div>
 </footer>
+  </div>
+  );
+};
+
+export default Website;
