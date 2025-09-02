@@ -176,8 +176,8 @@ const Events = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="events-page">
-      {/* Navbar */}
+   
+     {/* Navbar */}
       <nav className={`navbar ${scrolled ? "scrolled" : ""}`} aria-label="Main navigation">
         <div className="logo">
           <img
@@ -228,6 +228,7 @@ const Events = () => {
           )}
         </ul>
       </nav>
+
 
       <div className="container">
         <div className="events-header">
