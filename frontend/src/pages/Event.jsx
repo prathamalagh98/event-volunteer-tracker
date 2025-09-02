@@ -10,6 +10,9 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState(null); // You'll need to implement actual user authentication
 
   const isAdmin = true; // admin functionalities
 
@@ -29,6 +32,17 @@ const Events = () => {
   const [editingEvent, setEditingEvent] = useState(null);
   const [editImageFile, setEditImageFile] = useState(null);
   const [editPreview, setEditPreview] = useState(null);
+
+  // Handle scroll for navbar styling
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      setScrolled(isScrolled);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // ---- Fetch events ----
   useEffect(() => {
@@ -51,6 +65,13 @@ const Events = () => {
     };
     fetchEvents();
   }, [isAdmin]);
+
+  // Logout function
+  const logout = () => {
+    // Implement your logout logic here
+    console.log("Logout clicked");
+    setUser(null);
+  };
 
   const resetAddForm = () => {
     setNewEvent({ title: "", description: "", date: "", location: "" });
@@ -155,156 +176,90 @@ const Events = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="events-page container">
-      <div className="events-header">
-        <h1>All Events</h1>
-        {isAdmin && (
-          <button onClick={() => setShowAddForm((s) => !s)}>
-            {showAddForm ? "Close" : "+ Add Event"}
-          </button>
-        )}
-      </div>
+    <div className="events-page">
+      {/* Navbar */}
+      <nav className={`navbar ${scrolled ? "scrolled" : ""}`} aria-label="Main navigation">
+        <div className="logo">
+          <img
+            src="/video/logo.png"
+            alt="Event Volunteer Tracker Logo"
+            className="logo-img spin-on-hover"
+          />
+          <span className="logo-text">Event Volunteer Tracker</span>
+        </div>
 
-      {/* Add Event Form */}
-      {isAdmin && showAddForm && (
-        <form className="card add-form" onSubmit={handleAddSubmit}>
-          <div className="form-row">
-            <label>Title</label>
-            <input
-              type="text"
-              required
-              value={newEvent.title}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, title: e.target.value })
-              }
-            />
-          </div>
-          <div className="form-row">
-            <label>Description</label>
-            <textarea
-              required
-              value={newEvent.description}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, description: e.target.value })
-              }
-            />
-          </div>
-          <div className="form-grid-2">
-            <div className="form-row">
-              <label>Date</label>
-              <input
-                type="date"
-                required
-                value={newEvent.date}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, date: e.target.value })
-                }
-              />
-            </div>
-            <div className="form-row">
-              <label>Location</label>
-              <input
-                type="text"
-                required
-                value={newEvent.location}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, location: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <div className="form-row">
-            <label>Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0] || null;
-                setImageFile(file);
-                setPreview(file ? URL.createObjectURL(file) : null);
-              }}
-            />
-            {preview && (
-              <div className="image-preview">
-                <img src={preview} alt="preview" />
-              </div>
-            )}
-          </div>
-          <div className="form-actions">
-            <button type="submit" disabled={saving}>
-              {saving ? "Saving..." : "Create Event"}
+        <button
+          className={`menu-toggle ${isMenuOpen ? "active" : ""}`}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={isMenuOpen}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
+          <li>
+            <Link to="/admin" onClick={() => setIsMenuOpen(false)}>Home</Link>
+          </li>
+          <li>
+            <Link to="/event" onClick={() => setIsMenuOpen(false)}>Events</Link>
+          </li>
+          <li>
+            <Link to="/adminVolunteers" onClick={() => setIsMenuOpen(false)}>Volunteers</Link>
+          </li>
+          {user ? (
+            <>
+              <li className="user-greeting">Hello, {user.name}</li>
+              <li>
+                <button onClick={logout} className="btn-logout">Logout</button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link to="/" onClick={() => setIsMenuOpen(false)}>Login</Link>
+              </li>
+              <li>
+                <Link to="/" onClick={() => setIsMenuOpen(false)}>Register</Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
+
+      <div className="container">
+        <div className="events-header">
+          <h1>All Events</h1>
+          {isAdmin && (
+            <button onClick={() => setShowAddForm((s) => !s)}>
+              {showAddForm ? "Close" : "+ Add Event"}
             </button>
-            <button type="button" onClick={() => setShowAddForm(false)}>
-              Cancel
-            </button>
-          </div>
-        </form>
-      )}
+          )}
+        </div>
 
-      {/* Events List */}
-      <div className="events-grid">
-        {events.length === 0 ? (
-          <p>No events found.</p>
-        ) : (
-          events.map((event) => (
-            <div key={event._id} className="event-card">
-              <img
-                src={
-                  event.image
-                    ? `${IMAGE_BASE}${event.image}`
-                    : "https://via.placeholder.com/300x200?text=No+Image"
-                }
-                alt={event.title}
-                className="event-image"
-              />
-              <div className="event-info">
-                <h3>{event.title}</h3>
-                <p>{event.description}</p>
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {event.date ? new Date(event.date).toLocaleDateString() : "-"}
-                </p>
-                <p>
-                  <strong>Location:</strong> {event.location}
-                </p>
-                <div className="card-actions">
-                  <Link to={`/events/${event._id}`} className="btn-view-event">
-                    View Details
-                  </Link>
-                  {isAdmin && (
-                    <div className="admin-actions">
-                      <button onClick={() => openEdit(event)}>Edit</button>
-                      <button onClick={() => handleDelete(event._id)}>Delete</button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Edit Modal */}
-      {editingEvent && (
-        <div className="modal-backdrop" onClick={closeEdit}>
-          <div className="modal card" onClick={(e) => e.stopPropagation()}>
-            <h2>Edit Event</h2>
+        {/* Add Event Form */}
+        {isAdmin && showAddForm && (
+          <form className="card add-form" onSubmit={handleAddSubmit}>
             <div className="form-row">
               <label>Title</label>
               <input
                 type="text"
-                value={editingEvent.title}
+                required
+                value={newEvent.title}
                 onChange={(e) =>
-                  setEditingEvent({ ...editingEvent, title: e.target.value })
+                  setNewEvent({ ...newEvent, title: e.target.value })
                 }
               />
             </div>
             <div className="form-row">
               <label>Description</label>
               <textarea
-                value={editingEvent.description}
+                required
+                value={newEvent.description}
                 onChange={(e) =>
-                  setEditingEvent({ ...editingEvent, description: e.target.value })
+                  setNewEvent({ ...newEvent, description: e.target.value })
                 }
               />
             </div>
@@ -313,9 +268,10 @@ const Events = () => {
                 <label>Date</label>
                 <input
                   type="date"
-                  value={editingEvent.date || ""}
+                  required
+                  value={newEvent.date}
                   onChange={(e) =>
-                    setEditingEvent({ ...editingEvent, date: e.target.value })
+                    setNewEvent({ ...newEvent, date: e.target.value })
                   }
                 />
               </div>
@@ -323,9 +279,10 @@ const Events = () => {
                 <label>Location</label>
                 <input
                   type="text"
-                  value={editingEvent.location}
+                  required
+                  value={newEvent.location}
                   onChange={(e) =>
-                    setEditingEvent({ ...editingEvent, location: e.target.value })
+                    setNewEvent({ ...newEvent, location: e.target.value })
                   }
                 />
               </div>
@@ -337,25 +294,143 @@ const Events = () => {
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files?.[0] || null;
-                  setEditImageFile(file);
-                  setEditPreview(file ? URL.createObjectURL(file) : null);
+                  setImageFile(file);
+                  setPreview(file ? URL.createObjectURL(file) : null);
                 }}
               />
-              {editPreview && (
+              {preview && (
                 <div className="image-preview">
-                  <img src={editPreview} alt="preview" />
+                  <img src={preview} alt="preview" />
                 </div>
               )}
             </div>
-            <div className="modal-footer">
-              <button onClick={saveEdit} disabled={saving}>
-                {saving ? "Saving..." : "Save"}
+            <div className="form-actions">
+              <button type="submit" disabled={saving}>
+                {saving ? "Saving..." : "Create Event"}
               </button>
-              <button onClick={closeEdit}>Cancel</button>
+              <button type="button" onClick={() => setShowAddForm(false)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Events List */}
+        <div className="events-grid">
+          {events.length === 0 ? (
+            <p>No events found.</p>
+          ) : (
+            events.map((event) => (
+              <div key={event._id} className="event-card">
+                <img
+                  src={
+                    event.image
+                      ? `${IMAGE_BASE}${event.image}`
+                      : "https://via.placeholder.com/300x200?text=No+Image"
+                  }
+                  alt={event.title}
+                  className="event-image"
+                />
+                <div className="event-info">
+                  <h3>{event.title}</h3>
+                  <p>{event.description}</p>
+                  <p>
+                    <strong>Date:</strong>{" "}
+                    {event.date ? new Date(event.date).toLocaleDateString() : "-"}
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {event.location}
+                  </p>
+                  <div className="card-actions">
+                    <Link to={`/events/${event._id}`} className="btn-view-event">
+                      View Details
+                    </Link>
+                    {isAdmin && (
+                      <div className="admin-actions">
+                        <button onClick={() => openEdit(event)}>Edit</button>
+                        <button onClick={() => handleDelete(event._id)}>Delete</button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Edit Modal */}
+        {editingEvent && (
+          <div className="modal-backdrop" onClick={closeEdit}>
+            <div className="modal card" onClick={(e) => e.stopPropagation()}>
+              <h2>Edit Event</h2>
+              <div className="form-row">
+                <label>Title</label>
+                <input
+                  type="text"
+                  value={editingEvent.title}
+                  onChange={(e) =>
+                    setEditingEvent({ ...editingEvent, title: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-row">
+                <label>Description</label>
+                <textarea
+                  value={editingEvent.description}
+                  onChange={(e) =>
+                    setEditingEvent({ ...editingEvent, description: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-grid-2">
+                <div className="form-row">
+                  <label>Date</label>
+                  <input
+                    type="date"
+                    value={editingEvent.date || ""}
+                    onChange={(e) =>
+                      setEditingEvent({ ...editingEvent, date: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="form-row">
+                  <label>Location</label>
+                  <input
+                    type="text"
+                    value={editingEvent.location}
+                    onChange={(e) =>
+                      setEditingEvent({ ...editingEvent, location: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <label>Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    setEditImageFile(file);
+                    setEditPreview(file ? URL.createObjectURL(file) : null);
+                  }}
+                />
+                {editPreview && (
+                  <div className="image-preview">
+                    <img src={editPreview} alt="preview" />
+                  </div>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button onClick={saveEdit} disabled={saving}>
+                  {saving ? "Saving..." : "Save"}
+                </button>
+                <button onClick={closeEdit}>Cancel</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
