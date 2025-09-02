@@ -371,7 +371,7 @@ const Website = () => {
           <div className="success-grid">
             <div className="success-card animate-zoom">
               <div className="success-image-container">
-                <img src="/images/story1.jpg" alt="Community Clean-Up Drive" />
+                <img src="/video/story1.jpg" alt="Community Clean-Up Drive" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
@@ -384,7 +384,7 @@ const Website = () => {
             </div>
             <div className="success-card animate-zoom-delay">
               <div className="success-image-container">
-                <img src="/images/story2.jpg" alt="Food Distribution Program" />
+                <img src="/video/story2.jpg" alt="Food Distribution Program" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
@@ -394,7 +394,7 @@ const Website = () => {
             </div>
             <div className="success-card animate-zoom-delay2">
               <div className="success-image-container">
-                <img src="/images/story3.jpg" alt="Tree Plantation Event" />
+                <img src="/video/story3.jpg" alt="Tree Plantation Event" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
