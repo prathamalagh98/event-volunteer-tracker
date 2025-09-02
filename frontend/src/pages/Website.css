@@ -116,6 +116,7 @@ body {
     align-items: center;
     position: relative;
     z-index: 1001;
+    color: black;
 }
 
 .menu-toggle span {
