@@ -60,17 +60,24 @@ const Events = () => {
   // ---- Upload image to Cloudinary ----
   const uploadToCloudinary = async (file) => {
     if (!file) return null;
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary preset
-    data.append("cloud_name", "YOUR_CLOUD_NAME"); // replace with your Cloudinary cloud name
 
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`,
-      { method: "POST", body: data }
-    );
-    const result = await res.json();
-    return result.secure_url;
+    try {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary preset
+
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`,
+        { method: "POST", body: data }
+      );
+
+      const result = await res.json();
+      console.log("Uploaded image URL:", result.secure_url);
+      return result.secure_url;
+    } catch (err) {
+      console.error("Cloudinary upload error:", err);
+      return null;
+    }
   };
 
   // ---- Add Event ----
@@ -81,20 +88,18 @@ const Events = () => {
       let imageUrl = null;
       if (imageFile) imageUrl = await uploadToCloudinary(imageFile);
 
-      const fd = new FormData();
-      fd.append("title", newEvent.title);
-      fd.append("description", newEvent.description);
-      fd.append(
-        "date",
-        newEvent.date ? new Date(newEvent.date).toISOString() : ""
-      );
-      fd.append("location", newEvent.location);
-      if (imageUrl) fd.append("image", imageUrl);
+      const payload = {
+        ...newEvent,
+        date: newEvent.date ? new Date(newEvent.date).toISOString() : "",
+        image: imageUrl,
+      };
 
       const res = await fetch(`${API_BASE}/events`, {
         method: "POST",
-        body: fd,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
+
       if (!res.ok) throw new Error("Create failed");
 
       const created = await res.json();
@@ -145,24 +150,25 @@ const Events = () => {
       let imageUrl = editingEvent.image; // keep old image if not changed
       if (editImageFile) imageUrl = await uploadToCloudinary(editImageFile);
 
-      const fd = new FormData();
-      fd.append("title", editingEvent.title);
-      fd.append("description", editingEvent.description);
-      fd.append(
-        "date",
-        editingEvent.date ? new Date(editingEvent.date).toISOString() : ""
-      );
-      fd.append("location", editingEvent.location);
-      if (imageUrl) fd.append("image", imageUrl);
+      const payload = {
+        ...editingEvent,
+        date: editingEvent.date
+          ? new Date(editingEvent.date).toISOString()
+          : "",
+        image: imageUrl,
+      };
 
       const res = await fetch(`${API_BASE}/events/${editingEvent._id}`, {
         method: "PUT",
-        body: fd,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Update failed");
 
       const updated = await res.json();
-      setEvents((prev) => prev.map((e) => (e._id === updated._id ? updated : e)));
+      setEvents((prev) =>
+        prev.map((e) => (e._id === updated._id ? updated : e))
+      );
       closeEdit();
     } catch (err) {
       console.error("Edit event error:", err);
