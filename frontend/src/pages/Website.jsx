@@ -46,27 +46,27 @@ const [chatMessages, setChatMessages] = useState([
   const volunteerSpotlights = [
     {
       id: 1,
-      name: "Emma Rodriguez",
+      name: "Vikas",
       role: "Community Volunteer",
-      image: "/images/volunteer1.jpg",
+      image: "/video/Vikas.jpeg",
       quote: "This platform helped me find meaningful opportunities that match my skills and schedule.",
       contributions: "120+ hours volunteered",
       badges: ["Eco Warrior", "Community Champion", "Top Contributor"]
     },
     {
       id: 2,
-      name: "James Wilson",
+      name: "Rahul",
       role: "Event Organizer",
-      image: "/images/volunteer2.jpg",
+      image: "/video/Rahul.jpg",
       quote: "Managing volunteers has never been easier. The tracking and communication tools are exceptional.",
       contributions: "Organized 15+ events",
       badges: ["Leadership", "Event Master", "Community Builder"]
     },
     {
       id: 3,
-      name: "Sophia Chen",
+      name: "Jasmeet",
       role: "Youth Coordinator",
-      image: "/images/volunteer3.jpg",
+      image: "/video/Jasmeet.jpg",
       quote: "I've been able to engage our youth group in community service like never before.",
       contributions: "Mobilized 50+ students",
       badges: ["Youth Mentor", "Community Inspire", "Top Recruiter"]
