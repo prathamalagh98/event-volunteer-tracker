@@ -645,7 +645,7 @@ const [chatMessages, setChatMessages] = useState([
             </div>
             <div className="success-card animate-zoom-delay">
               <div className="success-image-container">
-                <img src="/images/story2.jpg" alt="Food Distribution Program" />
+                <img src="/video/story2.jpg" alt="Food Distribution Program" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
@@ -655,7 +655,7 @@ const [chatMessages, setChatMessages] = useState([
             </div>
             <div className="success-card animate-zoom-delay2">
               <div className="success-image-container">
-                <img src="/images/story3.jpg" alt="Tree Plantation Event" />
+                <img src="/video/story3.jpg" alt="Tree Plantation Event" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
@@ -677,7 +677,7 @@ const [chatMessages, setChatMessages] = useState([
             {volunteerSpotlights.map(volunteer => (
               <div key={volunteer.id} className="spotlight-card animate-on-scroll">
                 <div className="spotlight-image">
-                  <img src={volunteer.image} alt={volunteer.name} />
+                  <img src={volunteer.video} alt={volunteer.Rahul} />
                   <div className="volunteer-badges">
                     {volunteer.badges.map((badge, index) => (
                       <span key={index} className="badge">{badge}</span>
@@ -685,7 +685,7 @@ const [chatMessages, setChatMessages] = useState([
                   </div>
                 </div>
                 <div className="spotlight-content">
-                  <h3>{volunteer.name}</h3>
+                  <h3>{volunteer.Vikas}</h3>
                   <p className="volunteer-role">{volunteer.role}</p>
                   <p className="volunteer-quote">"{volunteer.quote}"</p>
                   <p className="volunteer-contributions">{volunteer.contributions}</p>
