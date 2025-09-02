@@ -5,7 +5,6 @@ import "./Website.css";
 import { useNavigate } from "react-router-dom";
 import { getBotReply, quickSuggestions } from "../chatbot/botLogic";
 
-
 const Website = () => {
   const authContext = useContext(AuthContext);
   const user = authContext?.user || null;
@@ -291,27 +290,26 @@ const Website = () => {
   const toggleChat = () => {
     setShowChat(!showChat);
   };
-const handleChatSubmit = (e) => {
-  e.preventDefault();
-  const text = message.trim();
-  if (!text) return;
 
-  // add user message
-  const userMsg = { id: Date.now(), text, sender: "user" };
-  setChatMessages((prev) => [...prev, userMsg]);
-  setMessage("");
+  const handleChatSubmit = (e) => {
+    e.preventDefault();
+    const text = message.trim();
+    if (!text) return;
 
-  // bot reply
-  const replyText = getBotReply(text);
-  setTimeout(() => {
-    setChatMessages((prev) => [
-      ...prev,
-      { id: Date.now() + 1, text: replyText, sender: "bot" },
-    ]);
-  }, 600);
-};
+    // add user message
+    const userMsg = { id: Date.now(), text, sender: "user" };
+    setChatMessages((prev) => [...prev, userMsg]);
+    setMessage("");
 
-
+    // bot reply
+    const replyText = getBotReply(text);
+    setTimeout(() => {
+      setChatMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, text: replyText, sender: "bot" },
+      ]);
+    }, 600);
+  };
 
   const shareOnSocialMedia = (platform) => {
     const url = encodeURIComponent(window.location.href);
@@ -393,37 +391,36 @@ const handleChatSubmit = (e) => {
               </div>
             ))}
           </div>
-          {/* Quick Replies */}
           
-<div className="quick-replies">
-  {quickSuggestions.map((q) => (
-    <button
-      key={q.id}
-      type="button"
-      className="chip"
-      onClick={() => {
-        // show user message
-        const userMsg = { id: Date.now(), text: q.question, sender: "user" };
-        setChatMessages((prev) => [...prev, userMsg]);
+          {/* Quick Replies */}
+          <div className="quick-replies">
+            {quickSuggestions.map((q) => (
+              <button
+                key={q.id}
+                type="button"
+                className="chip"
+                onClick={() => {
+                  // show user message
+                  const userMsg = { id: Date.now(), text: q.question, sender: "user" };
+                  setChatMessages((prev) => [...prev, userMsg]);
 
-        // show bot reply
-        const replyText = getBotReply(q.question);
-        setTimeout(() => {
-          setChatMessages((prev) => [
-            ...prev,
-            { id: Date.now() + 1, text: replyText, sender: "bot" },
-          ]);
-        }, 400);
+                  // show bot reply
+                  const replyText = getBotReply(q.question);
+                  setTimeout(() => {
+                    setChatMessages((prev) => [
+                      ...prev,
+                      { id: Date.now() + 1, text: replyText, sender: "bot" },
+                    ]);
+                  }, 400);
 
-        // optional: navigate
-        if (q.navigate) navigate(q.navigate);
-      }}
-    >
-      {q.label}
-    </button>
-  ))}
-</div>
-
+                  // optional: navigate
+                  if (q.navigate) navigate(q.navigate);
+                }}
+              >
+                {q.label}
+              </button>
+            ))}
+          </div>
           
           <form className="chat-input" onSubmit={handleChatSubmit}>
             <input
@@ -495,9 +492,8 @@ const handleChatSubmit = (e) => {
           <span></span>
           <span></span>
           {user?.role === "volunteer" && (
-
-)}
-
+            <span className="volunteer-indicator"></span>
+          )}
         </button>
         <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
           <li>
@@ -793,273 +789,267 @@ const handleChatSubmit = (e) => {
         </div>
       </section>
 
-      {/* Event Timeline Section */}
-      <section className="timeline-section">
-        <div className="container">
-          <h2>Upcoming Events</h2>
-          <p className="section-description">Join these upcoming community events</p>
-          
-          <div className="timeline">
-            <div className="timeline-event animate-on-scroll">
-              <div className="timeline-date">Aug 30, 2025</div>
-              <div className="timeline-content">
-                <h3>Beach Cleanup Day</h3>
-                <p>Help clean up local beaches and promote marine conservation.</p>
-                <span className="event-tag">Environment</span>
-                <div className="event-meta">
-                  <span><i className="fas fa-users"></i> 24 volunteers needed</span>
-                  <span><i className="fas fa-map-marker-alt"></i> Santa Monica Beach</span>
-                </div>
-              </div>
-            </div>
-            <div className="timeline-event animate-on-scroll">
-              <div className="timeline-date">Sep 5, 2025</div>
-              <div className="timeline-content">
-                <h3>Food Bank Assistance</h3>
-                <p>Sort and package food donations for distribution to families in need.</p>
-                <span className="event-tag">Hunger Relief</span>
-                <div className="event-meta">
-                  <span><i className="fas fa-users"></i> 18 volunteers needed</span>
-                  <span><i className="fas fa-map-marker-alt"></i> Downtown Community Center</span>
-                </div>
-              </div>
-            </div>
-            <div className="timeline-event animate-on-scroll">
-              <div className="timeline-date">Sep 12, 2025</div>
-              <div className="timeline-content">
-                <h3>Senior Tech Support</h3>
-                <p>Help seniors learn to use technology to stay connected with loved ones.</p>
-                <span className="event-tag">Education</span>
-                <div className="event-meta">
-                  <span><i className="fas fa-users"></i> 12 volunteers needed</span>
-                  <span><i className="fas fa-map-marker-alt"></i> Senior Living Community</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="timeline-cta">
-            <Link to="/VolunteerEvents" className="btn-register">View All Upcoming Events</Link>
+   {/* Event Timeline Section */}
+<section className="timeline-section">
+  <div className="container">
+    <h2>Upcoming Events</h2>
+    <p className="section-description">Join these upcoming community events</p>
+    
+    <div className="timeline">
+      <div className="timeline-event animate-on-scroll">
+        <div className="timeline-date">Aug 30, 2025</div>
+        <div className="timeline-content">
+          <h3>Beach Cleanup Day</h3>
+          <p>Help clean up local beaches and promote marine conservation.</p>
+          <span className="event-tag">Environment</span>
+          <div className="event-meta">
+            <span><i className="fas fa-users"></i> 24 volunteers needed</span>
+            <span><i className="fas fa-map-marker-alt"></i> Santa Monica Beach</span>
           </div>
         </div>
-      </section>
-
-      {/* Testimonial Section */}
-      <section className="testimonial-section" aria-labelledby="testimonials-heading">
-        <div className="container">
-          <h2 id="testimonials-heading">What People Say</h2>
-          <div className="testimonials-container">
-            <div className="testimonial animate-on-scroll">
-              <div className="testimonial-content">
-                <i className="fas fa-quote-left"></i>
-                <p>
-                  This platform revolutionized how we manage our volunteer
-                  programs. The tools saved us countless hours of administrative
-                  work.
-                </p>
-                <div className="testimonial-author">
-                  <div className="author-image"></div>
-                  <div className="author-details">
-                    <h4>Sarah Johnson</h4>
-                    <p>Nonprofit Director</p>
-                    <div className="rating">
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="testimonial animate-on-scroll">
-              <div className="testimonial-content">
-                <i className="fas fa-quote-left"></i>
-                <p>
-                  As a volunteer, I love how easy it is to find opportunities
-                  that match my skills and schedule. The tracking features are
-                  fantastic!
-                </p>
-                <div className="testimonial-author">
-                  <div className="author-image"></div>
-                  <div className="author-details">
-                    <h4>Michael Chen</h4>
-                    <p>Volunteer</p>
-                    <div className="rating">
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star"></i>
-                      <i className="fas fa-star-half-alt"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      </div>
+      <div className="timeline-event animate-on-scroll">
+        <div className="timeline-date">Sep 5, 2025</div>
+        <div className="timeline-content">
+          <h3>Food Bank Assistance</h3>
+          <p>Sort and package food donations for distribution to families in need.</p>
+          <span className="event-tag">Hunger Relief</span>
+          <div className="event-meta">
+            <span><i className="fas fa-users"></i> 18 volunteers needed</span>
+            <span><i className="fas fa-map-marker-alt"></i> Downtown Community Center</span>
           </div>
         </div>
-      </section>
-
-      {/* Social Share Section */}
-      <section className="social-section">
-        <div className="container">
-          <h2>Spread the Word</h2>
-          <p className="section-description">Help us reach more volunteers by sharing with your network</p>
-          
-          <div className="social-buttons">
-            <button className="social-btn facebook" onClick={() => shareOnSocialMedia('facebook')}>
-              <i className="fab fa-facebook-f"></i>
-              Share on Facebook
-            </button>
-            <button className="social-btn twitter" onClick={() => shareOnSocialMedia('twitter')}>
-              <i className="fab fa-twitter"></i>
-              Share on Twitter
-            </button>
-            <button className="social-btn linkedin" onClick={() => shareOnSocialMedia('linkedin')}>
-              <i className="fab fa-linkedin-in"></i>
-              Share on LinkedIn
-            </button>
+      </div>
+      <div className="timeline-event animate-on-scroll">
+        <div className="timeline-date">Sep 12, 2025</div>
+        <div className="timeline-content">
+          <h3>Senior Tech Support</h3>
+          <p>Help seniors learn to use technology to stay connected with loved ones.</p>
+          <span className="event-tag">Education</span>
+          <div className="event-meta">
+            <span><i className="fas fa-users"></i> 12 volunteers needed</span>
+            <span><i className="fas fa-map-marker-alt"></i> Senior Living Community</span>
           </div>
         </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="faq-section">
-        <div className="container">
-          <h2>Frequently Asked Questions</h2>
-          <p className="section-description">Find answers to common questions about our platform</p>
-          
-          <div className="faq-container">
-            {faqs.map((faq, index) => (
-              <div 
-                key={index} 
-                className={`faq-item ${activeFAQ === index ? 'active' : ''} animate-on-scroll`}
-                onClick={() => toggleFAQ(index)}
-              >
-                <div className="faq-question">
-                  <h3>{faq.question}</h3>
-                  <span className="faq-toggle">
-                    {activeFAQ === index ? <i className="fas fa-minus"></i> : <i className="fas fa-plus"></i>}
-                  </span>
-                </div>
-                <div className="faq-answer">
-                  <p>{faq.answer}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className="newsletter-section">
-        <div className="container">
-          <div className="newsletter-content">
-            <h2>Stay Updated</h2>
-            <p>Subscribe to our newsletter to receive updates on upcoming events and volunteer opportunities</p>
-            
-            {subscribed ? (
-              <div className="newsletter-success">
-                <i className="fas fa-check-circle"></i>
-                <p>Thank you for subscribing!</p>
-              </div>
-            ) : (
-              <form className="newsletter-form" onSubmit={handleSubscribe}>
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <button type="submit">Subscribe</button>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      {!user && (
-        <section className="cta-section">
-          <div className="container">
-            <div className="cta-content">
-              <h2>Ready to Make a Difference?</h2>
-              <p>Join our community of volunteers and organizations making an impact</p>
-              <div className="cta-buttons">
-                <Link to="/" className="btn-register">Sign Up Now</Link>
-                <Link to="/events" className="btn-secondary">Browse Events</Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Footer */}
-      <footer className="website-footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-section">
-              <h3>Event Volunteer Tracker</h3>
-              <p>
-                Connecting volunteers with opportunities to make a difference in
-                their communities.
-              </p>
-            <div className="social-links">
-  <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-    <i className="fab fa-facebook"></i>
-  </a>
-  <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
-    <i className="fab fa-twitter"></i>
-  </a>
-  <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-    <i className="fab fa-instagram"></i>
-  </a>
-  <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-    <i className="fab fa-linkedin"></i>
-  </a>
-</div>
-
-            </div>
-            <div className="footer-section">
-              <h4>Quick Links</h4>
-              <ul>
-                <li><Link to="/admin">Home</Link></li>
-                <li><Link to="/events">Events</Link></li>
-                <li><Link to="/volunteers">Volunteers</Link></li>
-                <li><Link to="/about">About Us</Link></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Resources</h4>
-              <ul>
-                <li><Link to="/blog">Blog</Link></li>
-                <li><Link to="/faq">FAQ</Link></li>
-                <li><Link to="/guides">Guides</Link></li>
-                <li><Link to="/contact">Contact</Link></li>
-              </ul>
-            </div>
-            <div className="footer-section">
-              <h4>Contact Info</h4>
-              <ul className="contact-info">
-                <li><i className="fas fa-envelope"></i> info@volunteertracker.com</li>
-                <li><i className="fas fa-phone"></i> (555) 123-4567</li>
-                <li><i className="fas fa-map-marker-alt"></i> 123 Volunteer St, City, Country</li>
-              </ul>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <p>&copy; 2025 Event Volunteer Tracker. All rights reserved.</p>
-            <div className="footer-links">
-              <Link to="/privacy">Privacy Policy</Link>
-              <Link to="/terms">Terms of Service</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
-  );
-};
+    
+    <div className="timeline-cta">
+      <Link to="/VolunteerEvents" className="btn-register">View All Upcoming Events</Link>
+    </div>
+  </div>
+</section>
 
-export default Website;
+{/* Testimonial Section */}
+<section className="testimonial-section" aria-labelledby="testimonials-heading">
+  <div className="container">
+    <h2 id="testimonials-heading">What People Say</h2>
+    <div className="testimonials-container">
+      <div className="testimonial animate-on-scroll">
+        <div className="testimonial-content">
+          <i className="fas fa-quote-left"></i>
+          <p>
+            This platform revolutionized how we manage our volunteer
+            programs. The tools saved us countless hours of administrative
+            work.
+          </p>
+          <div className="testimonial-author">
+            <div className="author-image"></div>
+            <div className="author-details">
+              <h4>Sarah Johnson</h4>
+              <p>Nonprofit Director</p>
+              <div className="rating">
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="testimonial animate-on-scroll">
+        <div className="testimonial-content">
+          <i className="fas fa-quote-left"></i>
+          <p>
+            As a volunteer, I love how easy it is to find opportunities
+            that match my skills and schedule. The tracking features are
+            fantastic!
+          </p>
+          <div className="testimonial-author">
+            <div className="author-image"></div>
+            <div className="author-details">
+              <h4>Michael Chen</h4>
+              <p>Volunteer</p>
+              <div className="rating">
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star-half-alt"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Social Share Section */}
+<section className="social-section">
+  <div className="container">
+    <h2>Spread the Word</h2>
+    <p className="section-description">Help us reach more volunteers by sharing with your network</p>
+    
+    <div className="social-buttons">
+      <button className="social-btn facebook" onClick={() => shareOnSocialMedia('facebook')}>
+        <i className="fab fa-facebook-f"></i>
+        Share on Facebook
+      </button>
+      <button className="social-btn twitter" onClick={() => shareOnSocialMedia('twitter')}>
+        <i className="fab fa-twitter"></i>
+        Share on Twitter
+      </button>
+      <button className="social-btn linkedin" onClick={() => shareOnSocialMedia('linkedin')}>
+        <i className="fab fa-linkedin-in"></i>
+        Share on LinkedIn
+      </button>
+    </div>
+  </div>
+</section>
+
+{/* FAQ Section */}
+<section className="faq-section">
+  <div className="container">
+    <h2>Frequently Asked Questions</h2>
+    <p className="section-description">Find answers to common questions about our platform</p>
+    
+    <div className="faq-container">
+      {faqs.map((faq, index) => (
+        <div 
+          key={index} 
+          className={`faq-item ${activeFAQ === index ? 'active' : ''} animate-on-scroll`}
+          onClick={() => toggleFAQ(index)}
+        >
+          <div className="faq-question">
+            <h3>{faq.question}</h3>
+            <span className="faq-toggle">
+              {activeFAQ === index ? <i className="fas fa-minus"></i> : <i className="fas fa-plus"></i>}
+            </span>
+          </div>
+          <div className="faq-answer">
+            <p>{faq.answer}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+{/* Newsletter Section */}
+<section className="newsletter-section">
+  <div className="container">
+    <div className="newsletter-content">
+      <h2>Stay Updated</h2>
+      <p>Subscribe to our newsletter to receive updates on upcoming events and volunteer opportunities</p>
+      
+      {subscribed ? (
+        <div className="newsletter-success">
+          <i className="fas fa-check-circle"></i>
+          <p>Thank you for subscribing!</p>
+        </div>
+      ) : (
+        <form className="newsletter-form" onSubmit={handleSubscribe}>
+          <input
+            type="email"
+            placeholder="Enter your email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button type="submit">Subscribe</button>
+        </form>
+      )}
+    </div>
+  </div>
+</section>
+
+{/* Call to Action */}
+{!user && (
+  <section className="cta-section">
+    <div className="container">
+      <div className="cta-content">
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join our community of volunteers and organizations making an impact</p>
+        <div className="cta-buttons">
+          <Link to="/" className="btn-register">Sign Up Now</Link>
+          <Link to="/events" className="btn-secondary">Browse Events</Link>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+{/* Footer */}
+<footer className="website-footer">
+  <div className="container">
+    <div className="footer-content">
+      <div className="footer-section">
+        <h3>Event Volunteer Tracker</h3>
+        <p>
+          Connecting volunteers with opportunities to make a difference in
+          their communities.
+        </p>
+        <div className="social-links">
+          <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+            <i className="fab fa-facebook"></i>
+          </a>
+          <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+            <i className="fab fa-twitter"></i>
+          </a>
+          <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+            <i className="fab fa-instagram"></i>
+          </a>
+          <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+            <i className="fab fa-linkedin"></i>
+          </a>
+        </div>
+      </div>
+      <div className="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><Link to="/admin">Home</Link></li>
+          <li><Link to="/events">Events</Link></li>
+          <li><Link to="/volunteers">Volunteers</Link></li>
+          <li><Link to="/about">About Us</Link></li>
+        </ul>
+      </div>
+      <div className="footer-section">
+        <h4>Resources</h4>
+        <ul>
+          <li><Link to="/blog">Blog</Link></li>
+          <li><Link to="/faq">FAQ</Link></li>
+          <li><Link to="/guides">Guides</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
+        </ul>
+      </div>
+      <div className="footer-section">
+        <h4>Contact Info</h4>
+        <ul className="contact-info">
+          <li><i className="fas fa-envelope"></i> info@volunteertracker.com</li>
+          <li><i className="fas fa-phone"></i> (555) 123-4567</li>
+          <li><i className="fas fa-map-marker-alt"></i> 123 Volunteer St, City, Country</li>
+        </ul>
+      </div>
+    </div>
+    <div className="footer-bottom">
+      <p>&copy; 2025 Event Volunteer Tracker. All rights reserved.</p>
+      <div className="footer-links">
+        <Link to="/privacy">Privacy Policy</Link>
+        <Link to="/terms">Terms of Service</Link>
+      </div>
+    </div>
+  </div>
+</footer>
