@@ -122,7 +122,7 @@ body {
 .menu-toggle span {
     width: 25px;
     height: 2.5px;
-    background-color: var(--dark);
+    background-color: black;
     margin: 2.5px 0;
     transition: var(--transition);
     border-radius: 2px;
