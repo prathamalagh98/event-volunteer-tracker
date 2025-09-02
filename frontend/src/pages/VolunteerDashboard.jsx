@@ -33,29 +33,36 @@ const Website = () => {
   const navigate = useNavigate();
 
   // Volunteer Spotlight Data
-  const volunteerSpotlights = [
+    const volunteerSpotlights = [
     {
-      id: 1, name: "Emma Rodriguez", role: "Community Volunteer",
-      image: "/images/volunteer1.jpg",
+      id: 1,
+      name: "Vikas",
+      role: "Community Volunteer",
+      image: "/video/Vikas.jpeg",
       quote: "This platform helped me find meaningful opportunities that match my skills and schedule.",
       contributions: "120+ hours volunteered",
       badges: ["Eco Warrior", "Community Champion", "Top Contributor"]
     },
     {
-      id: 2, name: "James Wilson", role: "Event Organizer",
-      image: "/images/volunteer2.jpg",
+      id: 2,
+      name: "Rahul",
+      role: "Event Organizer",
+      image: "/video/Rahul.jpg",
       quote: "Managing volunteers has never been easier. The tracking and communication tools are exceptional.",
       contributions: "Organized 15+ events",
       badges: ["Leadership", "Event Master", "Community Builder"]
     },
     {
-      id: 3, name: "Sophia Chen", role: "Youth Coordinator",
-      image: "/images/volunteer3.jpg",
+      id: 3,
+      name: "Jasmeet",
+      role: "Youth Coordinator",
+      image: "/video/Jasmeet.jpg",
       quote: "I've been able to engage our youth group in community service like never before.",
       contributions: "Mobilized 50+ students",
       badges: ["Youth Mentor", "Community Inspire", "Top Recruiter"]
     }
   ];
+
 
   // Event Locations
   const eventLocations = [
@@ -400,38 +407,31 @@ const Website = () => {
       </section>
 
       {/* Volunteer Spotlight Section */}
-      <section className="volunteer-spotlight">
-        <div className="container">
-          <h2>Volunteer Spotlight</h2>
-          <p className="section-description">Meet some of our amazing volunteers making a difference</p>
-          
-          <div className="spotlight-carousel">
-            {volunteerSpotlights.map(volunteer => (
-              <div key={volunteer.id} className="spotlight-card animate-on-scroll">
-                <div className="spotlight-image">
-                  <img src={volunteer.image} alt={volunteer.name} />
-                  <div className="volunteer-badges">
-                    {volunteer.badges.map((badge, index) => (
-                      <span key={index} className="badge">{badge}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="spotlight-content">
-                  <h3>{volunteer.name}</h3>
-                  <p className="volunteer-role">{volunteer.role}</p>
-                  <p className="volunteer-quote">"{volunteer.quote}"</p>
-                  <p className="volunteer-contributions">{volunteer.contributions}</p>
-                  
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '85%'}}></div>
-                    <span>85% impact score</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+     <div className="spotlight-carousel">
+  {volunteerSpotlights.map((volunteer) => (
+    <div key={volunteer.id} className="spotlight-card animate-on-scroll">
+      <div className="spotlight-image">
+        <img src={volunteer.image} alt={volunteer.name} />
+        <div className="volunteer-badges">
+          {volunteer.badges.map((badge, index) => (
+            <span key={index} className="badge">{badge}</span>
+          ))}
         </div>
-      </section>
+      </div>
+      <div className="spotlight-content">
+        <h3>{volunteer.name}</h3>
+        <p className="volunteer-role">{volunteer.role}</p>
+        <p className="volunteer-quote">"{volunteer.quote}"</p>
+        <p className="volunteer-contributions">{volunteer.contributions}</p>
+
+        <div className="progress-bar">
+          <div className="progress-fill" style={{ width: '85%' }}></div>
+          <span>85% impact score</span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
 
       {/* How It Works Section */}
       <section className="how-it-works-section">
