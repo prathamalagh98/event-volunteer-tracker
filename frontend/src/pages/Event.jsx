@@ -4,6 +4,7 @@ import "./Events.css";
 
 // Correct backend API base
 const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
+const IMAGE_BASE = "https://event-volunteer-tracker.onrender.com";
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -109,7 +110,7 @@ const Events = () => {
       ...event,
       date: event.date ? new Date(event.date).toISOString().split("T")[0] : "",
     });
-    setEditPreview(event.image ? `${API_BASE}${event.image}` : null);
+    setEditPreview(event.image ? `${IMAGE_BASE}${event.image}` : null);
     setEditImageFile(null);
   };
 
@@ -250,7 +251,7 @@ const Events = () => {
               <img
                 src={
                   event.image
-                    ? `${API_BASE}${event.image}`
+                    ? `${IMAGE_BASE}${event.image}`
                     : "https://via.placeholder.com/300x200?text=No+Image"
                 }
                 alt={event.title}
@@ -315,7 +316,6 @@ const Events = () => {
                   value={editingEvent.date || ""}
                   onChange={(e) =>
                     setEditingEvent({ ...editingEvent, date: e.target.value })
-                 
                   }
                 />
               </div>
