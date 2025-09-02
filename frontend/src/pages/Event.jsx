@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Events.css";
 
-// Backend API base
+// Correct backend API base
 const API_BASE = "https://event-volunteer-tracker.onrender.com/api";
 
 const Events = () => {
@@ -38,7 +38,7 @@ const Events = () => {
           : `${API_BASE}/events`;
 
         const res = await fetch(url);
-        if (!res.ok) throw new Error(`Failed to fetch events: ${res.status}`);
+        if (!res.ok) throw new Error("Failed to fetch events");
         const data = await res.json();
         setEvents(Array.isArray(data) ? data : []);
       } catch (err) {
@@ -57,49 +57,25 @@ const Events = () => {
     setPreview(null);
   };
 
-  // ---- Upload image to Cloudinary ----
-  const uploadToCloudinary = async (file) => {
-    if (!file) return null;
-
-    try {
-      const data = new FormData();
-      data.append("file", file);
-      data.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary preset
-
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`,
-        { method: "POST", body: data }
-      );
-
-      const result = await res.json();
-      console.log("Uploaded image URL:", result.secure_url);
-      return result.secure_url;
-    } catch (err) {
-      console.error("Cloudinary upload error:", err);
-      return null;
-    }
-  };
-
   // ---- Add Event ----
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     try {
-      let imageUrl = null;
-      if (imageFile) imageUrl = await uploadToCloudinary(imageFile);
-
-      const payload = {
-        ...newEvent,
-        date: newEvent.date ? new Date(newEvent.date).toISOString() : "",
-        image: imageUrl,
-      };
+      const fd = new FormData();
+      fd.append("title", newEvent.title);
+      fd.append("description", newEvent.description);
+      fd.append(
+        "date",
+        newEvent.date ? new Date(newEvent.date).toISOString() : ""
+      );
+      fd.append("location", newEvent.location);
+      if (imageFile) fd.append("image", imageFile);
 
       const res = await fetch(`${API_BASE}/events`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: fd,
       });
-
       if (!res.ok) throw new Error("Create failed");
 
       const created = await res.json();
@@ -133,7 +109,7 @@ const Events = () => {
       ...event,
       date: event.date ? new Date(event.date).toISOString().split("T")[0] : "",
     });
-    setEditPreview(event.image || null);
+    setEditPreview(event.image ? `${API_BASE}${event.image}` : null);
     setEditImageFile(null);
   };
 
@@ -147,28 +123,24 @@ const Events = () => {
     if (!editingEvent) return;
     setSaving(true);
     try {
-      let imageUrl = editingEvent.image; // keep old image if not changed
-      if (editImageFile) imageUrl = await uploadToCloudinary(editImageFile);
-
-      const payload = {
-        ...editingEvent,
-        date: editingEvent.date
-          ? new Date(editingEvent.date).toISOString()
-          : "",
-        image: imageUrl,
-      };
+      const fd = new FormData();
+      fd.append("title", editingEvent.title);
+      fd.append("description", editingEvent.description);
+      fd.append(
+        "date",
+        editingEvent.date ? new Date(editingEvent.date).toISOString() : ""
+      );
+      fd.append("location", editingEvent.location);
+      if (editImageFile) fd.append("image", editImageFile);
 
       const res = await fetch(`${API_BASE}/events/${editingEvent._id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: fd,
       });
       if (!res.ok) throw new Error("Update failed");
 
       const updated = await res.json();
-      setEvents((prev) =>
-        prev.map((e) => (e._id === updated._id ? updated : e))
-      );
+      setEvents((prev) => prev.map((e) => (e._id === updated._id ? updated : e)));
       closeEdit();
     } catch (err) {
       console.error("Edit event error:", err);
@@ -276,7 +248,11 @@ const Events = () => {
           events.map((event) => (
             <div key={event._id} className="event-card">
               <img
-                src={event.image || "/video/CleanPark.jpg"}
+                src={
+                  event.image
+                    ? `${API_BASE}${event.image}`
+                    : "https://via.placeholder.com/300x200?text=No+Image"
+                }
                 alt={event.title}
                 className="event-image"
               />
@@ -339,6 +315,7 @@ const Events = () => {
                   value={editingEvent.date || ""}
                   onChange={(e) =>
                     setEditingEvent({ ...editingEvent, date: e.target.value })
+                 
                   }
                 />
               </div>
