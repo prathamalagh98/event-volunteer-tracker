@@ -340,23 +340,7 @@
 
 /* Statistics Section Enhancement */
 
-
-/* ===== Stats (fixed) ===== */
-
-
-/* ====== STATS: force one-line on desktop (hard override) ====== */
-
-
-/* Container width sane raho */
-
-.stats-section .container {
-    width: min(1200px, 92%);
-    margin: 0 auto;
-}
-
-
 /* Always 4 columns on desktop — override anything older */
-
 .stats-section .stats-grid {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -364,12 +348,9 @@
     align-items: stretch;
     color: #fff;
     background: linear-gradient(135deg, var(--dark) 0%, var(--gray) 100%);
-
 }
 
-
 /* Cards equal height + no implicit min-width */
-
 .stats-section .stat-item {
     min-width: 0 !important;
     display: flex;
@@ -379,9 +360,7 @@
     min-height: 140px;
 }
 
-
 /* Numbers + labels tidy */
-
 .stats-section .stat-number {
     margin: 0 0 .4rem 0;
     line-height: 1.1;
@@ -391,9 +370,7 @@
     margin: 0;
 }
 
-
 /* Tablet: 2 columns */
-
 @media (max-width: 1024px) {
     .stats-section .stats-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -404,9 +381,7 @@
     }
 }
 
-
 /* Mobile: 1 column */
-
 @media (max-width: 520px) {
     .stats-section .stats-grid {
         grid-template-columns: 1fr !important;
