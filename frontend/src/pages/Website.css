@@ -391,36 +391,52 @@ body.dark-mode .step-content p {
 
 /* Statistics Section */
 
-.stats-section {
-    background: linear-gradient(135deg, var(--white) 0%, var(--gray) 100%);
-    color: rgb(6, 6, 6);
-    padding: 4rem 0;
+/* ====== STATS: force one-line on desktop (hard override) ====== */
+
+/* Container width sane raho */
+.stats-section .container {
+  width: min(1200px, 92%);
+  margin: 0 auto;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
+/* Always 4 columns on desktop — override anything older */
+.stats-section .stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 2rem !important;
+  align-items: stretch;
 }
 
-.stat-item {
-    text-align: center;
-    padding: 1.5rem;
+/* Cards equal height + no implicit min-width */
+.stats-section .stat-item {
+  min-width: 0 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 140px;
 }
 
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    background: linear-gradient(45deg, var(--gray), #000);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+/* Numbers + labels tidy */
+.stats-section .stat-number { margin: 0 0 .4rem 0; line-height: 1.1; }
+.stats-section .stat-label { margin: 0; }
+
+/* Tablet: 2 columns */
+@media (max-width: 1024px) {
+  .stats-section .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.5rem !important;
+  }
+  .stats-section .stat-item { min-height: 120px; }
 }
 
-.stat-label {
-    font-size: 1.1rem;
-    opacity: 0.9;
+/* Mobile: 1 column */
+@media (max-width: 520px) {
+  .stats-section .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .stats-section .stat-item { min-height: 110px; }
 }
 
 
