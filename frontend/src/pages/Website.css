@@ -362,6 +362,9 @@
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     gap: 2rem !important;
     align-items: stretch;
+    color: #fff;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+
 }
 
 
