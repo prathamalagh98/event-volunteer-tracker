@@ -363,7 +363,7 @@
     gap: 2rem !important;
     align-items: stretch;
     color: #fff;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, var(--light) 0%, var(--gray) 100%);
 
 }
 
