@@ -353,21 +353,7 @@ const [chatMessages, setChatMessages] = useState([
         {darkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
       </button>
 
-      {/* Language Toggle */}
-      <div className="language-toggle">
-        <button 
-          className={language === 'en' ? 'active' : ''} 
-          onClick={() => handleLanguageChange('en')}
-        >
-          EN
-        </button>
-        <button 
-          className={language === 'es' ? 'active' : ''} 
-          onClick={() => handleLanguageChange('es')}
-        >
-          ES
-        </button>
-      </div>
+    
 
       {/* Live Support Chat */}
       <div className={`chat-support ${showChat ? 'active' : ''}`}>
