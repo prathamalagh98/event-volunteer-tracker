@@ -390,7 +390,7 @@ const Website = () => {
 
             <div className="success-card animate-zoom-delay">
               <div className="success-image-container">
-                <img src="/video/story2.jpg" alt="Food Distribution Program" />
+                <img src="/video/food.jpg" alt="Food Distribution Program" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
