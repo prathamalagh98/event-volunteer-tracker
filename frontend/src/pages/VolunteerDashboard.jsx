@@ -33,7 +33,7 @@ const Website = () => {
   const navigate = useNavigate();
 
   // Volunteer Spotlight Data
-    const volunteerSpotlights = [
+  const volunteerSpotlights = [
     {
       id: 1,
       name: "Vikas",
@@ -62,7 +62,6 @@ const Website = () => {
       badges: ["Youth Mentor", "Community Inspire", "Top Recruiter"]
     }
   ];
-
 
   // Event Locations
   const eventLocations = [
@@ -136,7 +135,10 @@ const Website = () => {
 
   // Live volunteer counter
   useEffect(() => {
-    const interval = setInterval(() => setLiveCounter(prev => prev + Math.floor(Math.random() * 3)), 60000);
+    const interval = setInterval(
+      () => setLiveCounter(prev => prev + Math.floor(Math.random() * 3)),
+      60000
+    );
     return () => clearInterval(interval);
   }, []);
 
@@ -149,6 +151,12 @@ const Website = () => {
   useEffect(() => {
     if (chatContainerRef.current) chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
   }, [chatMessages]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isMenuOpen]);
 
   // Handlers
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -195,8 +203,6 @@ const Website = () => {
       <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)} aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
         {darkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
       </button>
-
-     
 
       {/* Live Support Chat */}
       <div className={`chat-support ${showChat ? 'active' : ''}`}>
@@ -258,6 +264,9 @@ const Website = () => {
         </ul>
       </nav>
 
+      {/* Backdrop for mobile menu (closes on tap) */}
+      {isMenuOpen && <div className="nav-backdrop" onClick={() => setIsMenuOpen(false)} />}
+
       {/* Hero Section with Video Background */}
       <header className="hero-section">
         <div className="video-background">
@@ -299,7 +308,6 @@ const Website = () => {
             Everything you need to manage volunteers and events efficiently
           </p>
           <div className="features-grid">
-            {/* Feature cards */}
             <div className="feature-card animate-zoom">
               <div className="feature-icon"><i className="fas fa-users"></i></div>
               <h3>Volunteer Management</h3>
@@ -324,15 +332,15 @@ const Website = () => {
         <div className="container">
           <h2>Events Near You</h2>
           <p className="section-description">Discover volunteering opportunities in your community</p>
-          
+
           <div className="map-container animate-on-scroll">
             <div className="map-placeholder">
               <i className="fas fa-map-marked-alt"></i>
               <p>Interactive Map Loading...</p>
               <div className="map-points">
                 {eventLocations.map(location => (
-                  <div 
-                    key={location.id} 
+                  <div
+                    key={location.id}
                     className="map-point"
                     style={{
                       top: `${Math.random() * 80 + 10}%`,
@@ -353,10 +361,10 @@ const Website = () => {
 
       {/* Banner Image Section */}
       <section className="banner-image-section">
-        <img 
-          src="/video/banner.jpeg" 
-          alt="Promotional Banner" 
-          className="banner-image animate-banner-drop" 
+        <img
+          src="/video/banner.jpeg"
+          alt="Promotional Banner"
+          className="banner-image animate-banner-drop"
         />
       </section>
 
@@ -364,10 +372,11 @@ const Website = () => {
       <section className="success-section">
         <div className="container">
           <h2 className="animate-slide-up">Success Stories</h2>
+
           <div className="success-grid">
             <div className="success-card animate-zoom">
               <div className="success-image-container">
-             <img src="/video/story1.png" alt="Community Clean-Up Drive" />
+                <img src="/video/story1.jpg" alt="Community Clean-Up Drive" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
@@ -378,6 +387,7 @@ const Website = () => {
                 impacting thousands of residents.
               </p>
             </div>
+
             <div className="success-card animate-zoom-delay">
               <div className="success-image-container">
                 <img src="/video/story2.jpg" alt="Food Distribution Program" />
@@ -386,48 +396,96 @@ const Website = () => {
                 </div>
               </div>
               <h3>Food Distribution Program</h3>
-              <p>500+ meals distributed to families in need across multiple neighborhoods.</p>
+              <p>
+                500+ meals distributed to families in need across multiple
+                neighborhoods.
+              </p>
             </div>
+
             <div className="success-card animate-zoom-delay2">
               <div className="success-image-container">
-                <img src="/video/story3.jpg" alt="Tree Plantation Event" />
+                <img src="/video/story3.webp" alt="Tree Plantation Event" />
                 <div className="success-overlay">
                   <button className="btn-view-more">View Details</button>
                 </div>
               </div>
               <h3>Tree Plantation Event</h3>
-              <p>Planted over 1000 trees with local schools and community groups.</p>
+              <p>
+                Planted over 1000 trees with local schools and community groups.
+              </p>
+            </div>
+
+            <div className="success-card animate-zoom-delay3">
+              <div className="success-image-container">
+                <img src="/video/story4.webp" alt="Blood Donation Camp" />
+                <div className="success-overlay">
+                  <button className="btn-view-more">View Details</button>
+                </div>
+              </div>
+              <h3>Blood Donation Camp</h3>
+              <p>
+                Organized a city-wide blood donation camp with 150+ donors,
+                saving hundreds of lives.
+              </p>
+            </div>
+
+            <div className="success-card animate-zoom-delay4">
+              <div className="success-image-container">
+                <img src="/video/story5.jpg" alt="Beach Cleanup Marathon" />
+                <div className="success-overlay">
+                  <button className="btn-view-more">View Details</button>
+                </div>
+              </div>
+              <h3>Beach Cleanup Marathon</h3>
+              <p>
+                Volunteers collected 2 tons of plastic waste from beaches to protect
+                marine life.
+              </p>
+            </div>
+
+            <div className="success-card animate-zoom-delay5">
+              <div className="success-image-container">
+                <img src="/video/story6.jpg" alt="Women Empowerment Workshop" />
+                <div className="success-overlay">
+                  <button className="btn-view-more">View Details</button>
+                </div>
+              </div>
+              <h3>Women Empowerment Workshop</h3>
+              <p>
+                Conducted workshops for 100+ women on self-employment and leadership
+                skills.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Volunteer Spotlight Section */}
-     <div className="spotlight-carousel">
-  {volunteerSpotlights.map((volunteer) => (
-    <div key={volunteer.id} className="spotlight-card animate-on-scroll">
-      <div className="spotlight-image">
-        <img src={volunteer.image} alt={volunteer.name} />
-        <div className="volunteer-badges">
-          {volunteer.badges.map((badge, index) => (
-            <span key={index} className="badge">{badge}</span>
-          ))}
-        </div>
-      </div>
-      <div className="spotlight-content">
-        <h3>{volunteer.name}</h3>
-        <p className="volunteer-role">{volunteer.role}</p>
-        <p className="volunteer-quote">"{volunteer.quote}"</p>
-        <p className="volunteer-contributions">{volunteer.contributions}</p>
+      <div className="spotlight-carousel">
+        {volunteerSpotlights.map((volunteer) => (
+          <div key={volunteer.id} className="spotlight-card animate-on-scroll">
+            <div className="spotlight-image">
+              <img src={volunteer.image} alt={volunteer.name} />
+              <div className="volunteer-badges">
+                {volunteer.badges.map((badge, index) => (
+                  <span key={index} className="badge">{badge}</span>
+                ))}
+              </div>
+            </div>
+            <div className="spotlight-content">
+              <h3>{volunteer.name}</h3>
+              <p className="volunteer-role">{volunteer.role}</p>
+              <p className="volunteer-quote">"{volunteer.quote}"</p>
+              <p className="volunteer-contributions">{volunteer.contributions}</p>
 
-        <div className="progress-bar">
-          <div className="progress-fill" style={{ width: '85%' }}></div>
-          <span>85% impact score</span>
-        </div>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: '85%' }}></div>
+                <span>85% impact score</span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
 
       {/* How It Works Section */}
       <section className="how-it-works-section">
@@ -464,7 +522,7 @@ const Website = () => {
         <div className="container">
           <h2>Resource Library</h2>
           <p className="section-description">Helpful resources for volunteers and organizers</p>
-          
+
           <div className="resources-grid">
             {resources.map(resource => (
               <a key={resource.id} href={resource.link} className="resource-card animate-on-scroll">
@@ -484,290 +542,290 @@ const Website = () => {
         </div>
       </section>
 
-   {/* Event Timeline Section */}
-<section className="timeline-section">
-  <div className="container">
-    <h2>Upcoming Events</h2>
-    <p className="section-description">Join these upcoming community events</p>
-    
-    <div className="timeline">
-      <div className="timeline-event animate-on-scroll">
-        <div className="timeline-date">Aug 30, 2025</div>
-        <div className="timeline-content">
-          <h3>Beach Cleanup Day</h3>
-          <p>Help clean up local beaches and promote marine conservation.</p>
-          <span className="event-tag">Environment</span>
-          <div className="event-meta">
-            <span><i className="fas fa-users"></i> 24 volunteers needed</span>
-            <span><i className="fas fa-map-marker-alt"></i> Santa Monica Beach</span>
-          </div>
-        </div>
-      </div>
-      <div className="timeline-event animate-on-scroll">
-        <div className="timeline-date">Sep 5, 2025</div>
-        <div className="timeline-content">
-          <h3>Food Bank Assistance</h3>
-          <p>Sort and package food donations for distribution to families in need.</p>
-          <span className="event-tag">Hunger Relief</span>
-          <div className="event-meta">
-            <span><i className="fas fa-users"></i> 18 volunteers needed</span>
-            <span><i className="fas fa-map-marker-alt"></i> Downtown Community Center</span>
-          </div>
-        </div>
-      </div>
-      <div className="timeline-event animate-on-scroll">
-        <div className="timeline-date">Sep 12, 2025</div>
-        <div className="timeline-content">
-          <h3>Senior Tech Support</h3>
-          <p>Help seniors learn to use technology to stay connected with loved ones.</p>
-          <span className="event-tag">Education</span>
-          <div className="event-meta">
-            <span><i className="fas fa-users"></i> 12 volunteers needed</span>
-            <span><i className="fas fa-map-marker-alt"></i> Senior Living Community</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div className="timeline-cta">
-      <Link to="/VolunteerEvents" className="btn-register">View All Upcoming Events</Link>
-    </div>
-  </div>
-</section>
+      {/* Event Timeline Section */}
+      <section className="timeline-section">
+        <div className="container">
+          <h2>Upcoming Events</h2>
+          <p className="section-description">Join these upcoming community events</p>
 
-{/* Testimonial Section */}
-<section className="testimonial-section" aria-labelledby="testimonials-heading">
-  <div className="container">
-    <h2 id="testimonials-heading">What People Say</h2>
-    <div className="testimonials-container">
-      <div className="testimonial animate-on-scroll">
-        <div className="testimonial-content">
-          <i className="fas fa-quote-left"></i>
-          <p>
-            This platform revolutionized how we manage our volunteer
-            programs. The tools saved us countless hours of administrative
-            work.
-          </p>
-          <div className="testimonial-author">
-            <div className="author-image"></div>
-            <div className="author-details">
-              <h4>Sarah Johnson</h4>
-              <p>Nonprofit Director</p>
-              <div className="rating">
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star"></i>
+          <div className="timeline">
+            <div className="timeline-event animate-on-scroll">
+              <div className="timeline-date">Aug 30, 2025</div>
+              <div className="timeline-content">
+                <h3>Beach Cleanup Day</h3>
+                <p>Help clean up local beaches and promote marine conservation.</p>
+                <span className="event-tag">Environment</span>
+                <div className="event-meta">
+                  <span><i className="fas fa-users"></i> 24 volunteers needed</span>
+                  <span><i className="fas fa-map-marker-alt"></i> Santa Monica Beach</span>
+                </div>
+              </div>
+            </div>
+            <div className="timeline-event animate-on-scroll">
+              <div className="timeline-date">Sep 5, 2025</div>
+              <div className="timeline-content">
+                <h3>Food Bank Assistance</h3>
+                <p>Sort and package food donations for distribution to families in need.</p>
+                <span className="event-tag">Hunger Relief</span>
+                <div className="event-meta">
+                  <span><i className="fas fa-users"></i> 18 volunteers needed</span>
+                  <span><i className="fas fa-map-marker-alt"></i> Downtown Community Center</span>
+                </div>
+              </div>
+            </div>
+            <div className="timeline-event animate-on-scroll">
+              <div className="timeline-date">Sep 12, 2025</div>
+              <div className="timeline-content">
+                <h3>Senior Tech Support</h3>
+                <p>Help seniors learn to use technology to stay connected with loved ones.</p>
+                <span className="event-tag">Education</span>
+                <div className="event-meta">
+                  <span><i className="fas fa-users"></i> 12 volunteers needed</span>
+                  <span><i className="fas fa-map-marker-alt"></i> Senior Living Community</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="timeline-cta">
+            <Link to="/VolunteerEvents" className="btn-register">View All Upcoming Events</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial Section */}
+      <section className="testimonial-section" aria-labelledby="testimonials-heading">
+        <div className="container">
+          <h2 id="testimonials-heading">What People Say</h2>
+          <div className="testimonials-container">
+            <div className="testimonial animate-on-scroll">
+              <div className="testimonial-content">
+                <i className="fas fa-quote-left"></i>
+                <p>
+                  This platform revolutionized how we manage our volunteer
+                  programs. The tools saved us countless hours of administrative
+                  work.
+                </p>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-details">
+                    <h4>Sarah Johnson</h4>
+                    <p>Nonprofit Director</p>
+                    <div className="rating">
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="testimonial animate-on-scroll">
+              <div className="testimonial-content">
+                <i className="fas fa-quote-left"></i>
+                <p>
+                  As a volunteer, I love how easy it is to find opportunities
+                  that match my skills and schedule. The tracking features are
+                  fantastic!
+                </p>
+                <div className="testimonial-author">
+                  <div className="author-image"></div>
+                  <div className="author-details">
+                    <h4>Michael Chen</h4>
+                    <p>Volunteer</p>
+                    <div className="rating">
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star-half-alt"></i>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="testimonial animate-on-scroll">
-        <div className="testimonial-content">
-          <i className="fas fa-quote-left"></i>
-          <p>
-            As a volunteer, I love how easy it is to find opportunities
-            that match my skills and schedule. The tracking features are
-            fantastic!
-          </p>
-          <div className="testimonial-author">
-            <div className="author-image"></div>
-            <div className="author-details">
-              <h4>Michael Chen</h4>
-              <p>Volunteer</p>
-              <div className="rating">
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star"></i>
-                <i className="fas fa-star-half-alt"></i>
-              </div>
-            </div>
+      </section>
+
+      {/* Social Share Section */}
+      <section className="social-section">
+        <div className="container">
+          <h2>Spread the Word</h2>
+          <p className="section-description">Help us reach more volunteers by sharing with your network</p>
+
+          <div className="social-buttons">
+            <button className="social-btn facebook" onClick={() => shareOnSocialMedia('facebook')}>
+              <i className="fab fa-facebook-f"></i>
+              Share on Facebook
+            </button>
+            <button className="social-btn twitter" onClick={() => shareOnSocialMedia('twitter')}>
+              <i className="fab fa-twitter"></i>
+              Share on Twitter
+            </button>
+            <button className="social-btn linkedin" onClick={() => shareOnSocialMedia('linkedin')}>
+              <i className="fab fa-linkedin-in"></i>
+              Share on LinkedIn
+            </button>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
-{/* Social Share Section */}
-<section className="social-section">
-  <div className="container">
-    <h2>Spread the Word</h2>
-    <p className="section-description">Help us reach more volunteers by sharing with your network</p>
-    
-    <div className="social-buttons">
-      <button className="social-btn facebook" onClick={() => shareOnSocialMedia('facebook')}>
-        <i className="fab fa-facebook-f"></i>
-        Share on Facebook
-      </button>
-      <button className="social-btn twitter" onClick={() => shareOnSocialMedia('twitter')}>
-        <i className="fab fa-twitter"></i>
-        Share on Twitter
-      </button>
-      <button className="social-btn linkedin" onClick={() => shareOnSocialMedia('linkedin')}>
-        <i className="fab fa-linkedin-in"></i>
-        Share on LinkedIn
-      </button>
-    </div>
-  </div>
-</section>
-      {/* 🔹 Motivational Banner Video Section */}
-<section className="banner-video-section">
-  <video
-    className="banner-video"
-    autoPlay
-    loop
-    muted
-    playsInline
-  >
-    <source src="/video/Banner video.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-  <div className="banner-overlay">
-    <h2 className="banner-text">
-      Together, we can create a better tomorrow 🌍
-    </h2>
-  </div>
-</section>
-
-
-{/* FAQ Section */}
-<section className="faq-section">
-  <div className="container">
-    <h2>Frequently Asked Questions</h2>
-    <p className="section-description">Find answers to common questions about our platform</p>
-    
-    <div className="faq-container">
-      {faqs.map((faq, index) => (
-        <div 
-          key={index} 
-          className={`faq-item ${activeFAQ === index ? 'active' : ''} animate-on-scroll`}
-          onClick={() => toggleFAQ(index)}
+      {/* Motivational Banner Video Section */}
+      <section className="banner-video-section">
+        <video
+          className="banner-video"
+          autoPlay
+          loop
+          muted
+          playsInline
         >
-          <div className="faq-question">
-            <h3>{faq.question}</h3>
-            <span className="faq-toggle">
-              {activeFAQ === index ? <i className="fas fa-minus"></i> : <i className="fas fa-plus"></i>}
-            </span>
-          </div>
-          <div className="faq-answer">
-            <p>{faq.answer}</p>
-          </div>
+          <source src="/video/Banner video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="banner-overlay">
+          <h2 className="banner-text">
+            Together, we can create a better tomorrow 🌍
+          </h2>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
-{/* Newsletter Section */}
-<section className="newsletter-section">
-  <div className="container">
-    <div className="newsletter-content">
-      <h2>Stay Updated</h2>
-      <p>Subscribe to our newsletter to receive updates on upcoming events and volunteer opportunities</p>
-      
-      {subscribed ? (
-        <div className="newsletter-success">
-          <i className="fas fa-check-circle"></i>
-          <p>Thank you for subscribing!</p>
+      {/* FAQ Section */}
+      <section className="faq-section">
+        <div className="container">
+          <h2>Frequently Asked Questions</h2>
+          <p className="section-description">Find answers to common questions about our platform</p>
+
+          <div className="faq-container">
+            {faqs.map((faq, index) => (
+              <div
+                key={index}
+                className={`faq-item ${activeFAQ === index ? 'active' : ''} animate-on-scroll`}
+                onClick={() => toggleFAQ(index)}
+              >
+                <div className="faq-question">
+                  <h3>{faq.question}</h3>
+                  <span className="faq-toggle">
+                    {activeFAQ === index ? <i className="fas fa-minus"></i> : <i className="fas fa-plus"></i>}
+                  </span>
+                </div>
+                <div className="faq-answer">
+                  <p>{faq.answer}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      ) : (
-        <form className="newsletter-form" onSubmit={handleSubscribe}>
-          <input
-            type="email"
-            placeholder="Enter your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button type="submit">Subscribe</button>
-        </form>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="newsletter-section">
+        <div className="container">
+          <div className="newsletter-content">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to our newsletter to receive updates on upcoming events and volunteer opportunities</p>
+
+            {subscribed ? (
+              <div className="newsletter-success">
+                <i className="fas fa-check-circle"></i>
+                <p>Thank you for subscribing!</p>
+              </div>
+            ) : (
+              <form className="newsletter-form" onSubmit={handleSubscribe}>
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <button type="submit">Subscribe</button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      {!user && (
+        <section className="cta-section">
+          <div className="container">
+            <div className="cta-content">
+              <h2>Ready to Make a Difference?</h2>
+              <p>Join our community of volunteers and organizations making an impact</p>
+              <div className="cta-buttons">
+                <Link to="/" className="btn-register">Sign Up Now</Link>
+                <Link to="/events" className="btn-secondary">Browse Events</Link>
+              </div>
+            </div>
+          </div>
+        </section>
       )}
-    </div>
-  </div>
-</section>
 
-{/* Call to Action */}
-{!user && (
-  <section className="cta-section">
-    <div className="container">
-      <div className="cta-content">
-        <h2>Ready to Make a Difference?</h2>
-        <p>Join our community of volunteers and organizations making an impact</p>
-        <div className="cta-buttons">
-          <Link to="/" className="btn-register">Sign Up Now</Link>
-          <Link to="/events" className="btn-secondary">Browse Events</Link>
+      {/* Footer */}
+      <footer className="website-footer">
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-section">
+              <h3>Event Volunteer Tracker</h3>
+              <p>
+                Connecting volunteers with opportunities to make a difference in
+                their communities.
+              </p>
+              <div className="social-links">
+                <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-facebook"></i>
+                </a>
+                <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-instagram"></i>
+                </a>
+                <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                  <i className="fab fa-linkedin"></i>
+                </a>
+              </div>
+            </div>
+            <div className="footer-section">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><Link to="/admin">Home</Link></li>
+                <li><Link to="/events">Events</Link></li>
+                <li><Link to="/volunteers">Volunteers</Link></li>
+                <li><Link to="/about">About Us</Link></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h4>Resources</h4>
+              <ul>
+                <li><Link to="/blog">Blog</Link></li>
+                <li><Link to="/faq">FAQ</Link></li>
+                <li><Link to="/guides">Guides</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
+              </ul>
+            </div>
+            <div className="footer-section">
+              <h4>Contact Info</h4>
+              <ul className="contact-info">
+                <li><i className="fas fa-envelope"></i> info@volunteertracker.com</li>
+                <li><i className="fas fa-phone"></i> (555) 123-4567</li>
+                <li><i className="fas fa-map-marker-alt"></i> 123 Volunteer St, City, Country</li>
+              </ul>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <p>&copy; 2025 Event Volunteer Tracker. All rights reserved.</p>
+            <div className="footer-links">
+              <Link to="/privacy">Privacy Policy</Link>
+              <Link to="/terms">Terms of Service</Link>
+            </div>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
-  </section>
-)}
-
-{/* Footer */}
-<footer className="website-footer">
-  <div className="container">
-    <div className="footer-content">
-      <div className="footer-section">
-        <h3>Event Volunteer Tracker</h3>
-        <p>
-          Connecting volunteers with opportunities to make a difference in
-          their communities.
-        </p>
-        <div className="social-links">
-          <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-facebook"></i>
-          </a>
-          <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-twitter"></i>
-          </a>
-          <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-instagram"></i>
-          </a>
-          <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-linkedin"></i>
-          </a>
-        </div>
-      </div>
-      <div className="footer-section">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><Link to="/admin">Home</Link></li>
-          <li><Link to="/events">Events</Link></li>
-          <li><Link to="/volunteers">Volunteers</Link></li>
-          <li><Link to="/about">About Us</Link></li>
-        </ul>
-      </div>
-      <div className="footer-section">
-        <h4>Resources</h4>
-        <ul>
-          <li><Link to="/blog">Blog</Link></li>
-          <li><Link to="/faq">FAQ</Link></li>
-          <li><Link to="/guides">Guides</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-        </ul>
-      </div>
-      <div className="footer-section">
-        <h4>Contact Info</h4>
-        <ul className="contact-info">
-          <li><i className="fas fa-envelope"></i> info@volunteertracker.com</li>
-          <li><i className="fas fa-phone"></i> (555) 123-4567</li>
-          <li><i className="fas fa-map-marker-alt"></i> 123 Volunteer St, City, Country</li>
-        </ul>
-      </div>
-    </div>
-    <div className="footer-bottom">
-      <p>&copy; 2025 Event Volunteer Tracker. All rights reserved.</p>
-      <div className="footer-links">
-        <Link to="/privacy">Privacy Policy</Link>
-        <Link to="/terms">Terms of Service</Link>
-      </div>
-    </div>
-  </div>
-</footer>
-  </div>
   );
 };
 
